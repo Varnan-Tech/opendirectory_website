@@ -70,7 +70,7 @@ export function FilterableSkills({ initialRepos }: FilterableSkillsProps) {
           />
         </div>
         
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-nowrap overflow-x-auto gap-2 pb-2 scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
           {allTags.map(tag => (
             <button
               key={tag}

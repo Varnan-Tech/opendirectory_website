@@ -5,9 +5,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import rehypeRaw from "rehype-raw";
+import rehypeHighlight from "rehype-highlight";
+import "highlight.js/styles/github-dark.css";
 import { 
-  Star, 
-  GitFork, 
   Code2, 
   Globe, 
   Search,
@@ -139,7 +140,7 @@ function InstallButton({ name }: { name: string }) {
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.5, opacity: 0 }}
           >
-            <Check className="w-3.5 h-3.5" />
+            <Check className="w-3.5 h-3.5 text-green-500" />
           </motion.div>
         ) : (
           <motion.div
@@ -180,6 +181,7 @@ export function BentoGrid({ repos }: BentoGridProps) {
   const [selectedRepo, setSelectedRepo] = useState<GitHubRepo | null>(null);
   const [readme, setReadme] = useState<string>("");
   const [isLoadingReadme, setIsLoadingReadme] = useState(false);
+  const [copiedPrompt, setCopiedPrompt] = useState(false);
 
   useEffect(() => {
     if (!selectedRepo) {
@@ -201,7 +203,7 @@ export function BentoGrid({ repos }: BentoGridProps) {
         } else {
           setReadme("Failed to load README.");
         }
-      } catch (error) {
+      } catch {
         setReadme("Failed to load README.");
       } finally {
         setIsLoadingReadme(false);
@@ -215,6 +217,8 @@ export function BentoGrid({ repos }: BentoGridProps) {
     e.stopPropagation();
     navigator.clipboard.writeText(`Agent: clone this repo https://github.com/Varnan-Tech/${repoName} and read the whole README.md file in that repository to understand how to use it. If there is anything you need, like an environment variable or any dependencies, ask your human agent for it.`);
     toast.success("Copied prompt to clipboard!");
+    setCopiedPrompt(true);
+    setTimeout(() => setCopiedPrompt(false), 2000);
   };
 
   return (
@@ -257,7 +261,13 @@ export function BentoGrid({ repos }: BentoGridProps) {
               
               <div className="flex items-center gap-3 mb-3 relative z-10">
                 <BrandIcon name={item.name} />
-                <h4 className="text-[15px] font-mono font-semibold text-black/80 group-hover:text-[#856FE6] tracking-tight transition-colors break-all">
+                <h4 
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    window.open(`https://github.com/Varnan-Tech/${item.name}`, '_blank');
+                  }}
+                  className="text-[15px] font-mono font-semibold text-black/80 group-hover:text-[#856FE6] tracking-tight transition-colors break-all"
+                >
                   {item.name}
                 </h4>
                 <CategoryTags name={item.name} description={item.description} />
@@ -332,8 +342,8 @@ export function BentoGrid({ repos }: BentoGridProps) {
                       onClick={(e) => handleCopyPrompt(e, selectedRepo.name)}
                       className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium text-black/60 hover:text-[#856FE6] hover:bg-[#856FE6]/10 rounded-md transition-colors"
                     >
-                      <Copy className="w-3.5 h-3.5" />
-                      Copy Prompt
+                      {copiedPrompt ? <Check className="w-3.5 h-3.5 text-green-500" /> : <Copy className="w-3.5 h-3.5" />}
+                      {copiedPrompt ? "Copied!" : "Copy Prompt"}
                     </button>
                   </div>
                   <p className="text-sm text-black/60 font-mono leading-relaxed">
@@ -347,7 +357,15 @@ export function BentoGrid({ repos }: BentoGridProps) {
                       <div className="w-6 h-6 border-2 border-[#856FE6] border-t-transparent rounded-full animate-spin" />
                     </div>
                   ) : (
-                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                    <ReactMarkdown 
+                      remarkPlugins={[remarkGfm]} 
+                      rehypePlugins={[rehypeRaw, rehypeHighlight]}
+                      className="prose prose-sm md:prose-base max-w-none text-black"
+                      components={{
+                        img: ({ ...props }) => <img {...props} alt={props.alt || ""} className="max-w-full rounded-lg" />,
+                        video: ({ ...props }) => <video {...props} className="max-w-full rounded-lg" controls />
+                      }}
+                    >
                       {readme}
                     </ReactMarkdown>
                   )}
