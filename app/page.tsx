@@ -18,6 +18,7 @@ interface GitHubRepo {
   stars: number;
   forks: number;
   updatedAt: string;
+  topics?: string[];
 }
 
 function getLanguageColor(language: string) {
@@ -57,24 +58,91 @@ async function getGitHubStats(): Promise<GitHubRepo[]> {
     if (!res.ok) return [];
 
     const allRepos = await res.json();
+    const excludedRepos = ["Meta-Ads-MCP_PixelPay", "beehiiv-email-poll"];
     
-    const filteredRepos = allRepos.filter((repo: any) => 
-      !repo.fork && 
-      !repo.archived && 
-      (repo.topics?.some((t: string) => t.includes('skill') || t.includes('scraper')) || 
-       repo.name.toLowerCase().includes('skill') || 
-       repo.name.toLowerCase().includes('scraper'))
-    );
+    const processedRepos = await Promise.all(allRepos.map(async (repo: {
+      name: string;
+      description: string;
+      language: string;
+      stargazers_count: number;
+      forks_count: number;
+      updated_at: string;
+      fork: boolean;
+      archived: boolean;
+      topics?: string[];
+    }) => {
+      if (repo.fork || repo.archived || excludedRepos.includes(repo.name)) return null;
 
-    return filteredRepos.map((data: any) => ({
-      name: data.name,
-      description: data.description,
-      language: data.language || "Unknown",
-      languageColor: getLanguageColor(data.language || "Unknown"),
-      stars: data.stargazers_count,
-      forks: data.forks_count,
-      updatedAt: formatDistanceToNow(new Date(data.updated_at)) + " ago"
+      let isSkill = repo.topics?.some((t: string) => t.includes('skill') || t.includes('scraper')) || 
+                    repo.name.toLowerCase().includes('skill') || 
+                    repo.name.toLowerCase().includes('scraper');
+      
+      let description = repo.description;
+      let topics = repo.topics || [];
+
+      if (!isSkill || !description || topics.length === 0) {
+        try {
+          const readmeRes = await fetch(`https://raw.githubusercontent.com/Varnan-Tech/${repo.name}/main/README.md`, {
+            next: { revalidate: 3600 }
+          });
+          
+          let readmeText = "";
+          if (readmeRes.ok) {
+            readmeText = await readmeRes.text();
+          } else {
+            const masterRes = await fetch(`https://raw.githubusercontent.com/Varnan-Tech/${repo.name}/master/README.md`, {
+              next: { revalidate: 3600 }
+            });
+            if (masterRes.ok) {
+              readmeText = await masterRes.text();
+            }
+          }
+
+          if (readmeText) {
+            if (!isSkill) {
+              const lowerReadme = readmeText.toLowerCase();
+              if (lowerReadme.includes('skill') || lowerReadme.includes('agent') || lowerReadme.includes('mcp')) {
+                isSkill = true;
+              }
+            }
+
+            if (!description) {
+              const lines = readmeText.split('\\n');
+              for (const line of lines) {
+                const trimmed = line.trim();
+                if (trimmed && !trimmed.startsWith('#') && !trimmed.startsWith('<') && !trimmed.startsWith('![')) {
+                  description = trimmed;
+                  break;
+                }
+              }
+            }
+
+            const tagsMatch = readmeText.match(/Tags:\\s*(.+)/i);
+            if (tagsMatch && tagsMatch[1]) {
+              const extraTags = tagsMatch[1].split(',').map(t => t.trim().toLowerCase());
+              topics = [...new Set([...topics, ...extraTags])];
+            }
+          }
+        } catch (e) {
+          console.error(`Error fetching README for ${repo.name}:`, e);
+        }
+      }
+
+      if (!isSkill) return null;
+
+      return {
+        name: repo.name,
+        description: description || "Open source agent skill pipeline and automation logic.",
+        language: repo.language || "Unknown",
+        languageColor: getLanguageColor(repo.language || "Unknown"),
+        stars: repo.stargazers_count,
+        forks: repo.forks_count,
+        updatedAt: formatDistanceToNow(new Date(repo.updated_at)) + " ago",
+        topics
+      };
     }));
+
+    return processedRepos.filter(Boolean) as GitHubRepo[];
   } catch (error) {
     console.error("Error fetching GitHub stats:", error);
     return [];
@@ -176,7 +244,7 @@ export default async function Home() {
             </p>
           </div>
           
-          <FilterableSkills initialRepos={repos as any} />
+          <FilterableSkills initialRepos={repos as GitHubRepo[]} />
         </div>
       </section>
 

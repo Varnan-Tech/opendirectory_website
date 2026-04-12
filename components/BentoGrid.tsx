@@ -19,7 +19,10 @@ import {
   Check,
   Copy,
   TerminalSquare,
-  X
+  X,
+  GitPullRequest,
+  Mail,
+  Package
 } from "lucide-react";
 
 export interface GitHubRepo {
@@ -77,6 +80,26 @@ function BrandIcon({ name }: { name: string }) {
         <path fill="#ff4500" d="M108 0C48.35 0 0 48.35 0 108c0 29.82 12.09 56.82 31.63 76.37l-20.57 20.57C6.98 209.02 9.87 216 15.64 216H108c59.65 0 108-48.35 108-108S167.65 0 108 0Z"/><circle cx="108" cy="128" r="72" fill="#fff"/>
       </svg>
     );
+  }
+
+  if (lowerName.includes("meta")) {
+    return (
+      <svg viewBox="0 0 24 24" className="w-5 h-5" fill="currentColor">
+        <path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm-3.11-8.5l-2.89 1.67L7.11 17l2.89-1.67v-3.33zm6.22 0v3.33L18 15.16l-1.11-1.93-2.89 1.67v-3.33l-2.89-1.67L12 8.16l-2.89 1.67L8 8.16l4-2.31 4 2.31-1.11 1.67-2.89-1.67v3.33l2.89 1.67z" fill="#0668E1"/>
+      </svg>
+    );
+  }
+
+  if (lowerName.includes("amazon")) {
+    return <Package className="w-5 h-5 text-[#FF9900]" />;
+  }
+
+  if (lowerName.includes("explain-this-pr") || lowerName.includes("pr")) {
+    return <GitPullRequest className="w-5 h-5 text-[#856FE6]" />;
+  }
+
+  if (lowerName.includes("newsletter") || lowerName.includes("email")) {
+    return <Mail className="w-5 h-5 text-[#856FE6]" />;
   }
 
   if (lowerName.includes("scraper") || lowerName.includes("luma")) return <Search className="w-5 h-5 text-[#856FE6]" />;
@@ -357,17 +380,18 @@ export function BentoGrid({ repos }: BentoGridProps) {
                       <div className="w-6 h-6 border-2 border-[#856FE6] border-t-transparent rounded-full animate-spin" />
                     </div>
                   ) : (
-                    <ReactMarkdown 
-                      remarkPlugins={[remarkGfm]} 
-                      rehypePlugins={[rehypeRaw, rehypeHighlight]}
-                      className="prose prose-sm md:prose-base max-w-none text-black"
-                      components={{
-                        img: ({ ...props }) => <img {...props} alt={props.alt || ""} className="max-w-full rounded-lg" />,
-                        video: ({ ...props }) => <video {...props} className="max-w-full rounded-lg" controls />
-                      }}
-                    >
-                      {readme}
-                    </ReactMarkdown>
+                    <div className="prose prose-sm md:prose-base max-w-none text-black">
+                      <ReactMarkdown 
+                        remarkPlugins={[remarkGfm]} 
+                        rehypePlugins={[rehypeRaw, rehypeHighlight]}
+                        components={{
+                          img: ({ ...props }) => <img {...props} alt={props.alt || ""} className="max-w-full rounded-lg" />,
+                          video: ({ ...props }) => <video {...props} className="max-w-full rounded-lg" controls />
+                        }}
+                      >
+                        {readme}
+                      </ReactMarkdown>
+                    </div>
                   )}
                 </div>
               </div>
