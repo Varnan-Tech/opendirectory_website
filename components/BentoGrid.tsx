@@ -1,8 +1,10 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { 
   Star, 
   GitFork, 
@@ -15,7 +17,8 @@ import {
   Layers,
   Check,
   Copy,
-  TerminalSquare
+  TerminalSquare,
+  X
 } from "lucide-react";
 
 export interface GitHubRepo {
@@ -174,6 +177,46 @@ function ForkIcon() {
 }
 
 export function BentoGrid({ repos }: BentoGridProps) {
+  const [selectedRepo, setSelectedRepo] = useState<GitHubRepo | null>(null);
+  const [readme, setReadme] = useState<string>("");
+  const [isLoadingReadme, setIsLoadingReadme] = useState(false);
+
+  useEffect(() => {
+    if (!selectedRepo) {
+      setReadme("");
+      return;
+    }
+
+    const fetchReadme = async () => {
+      setIsLoadingReadme(true);
+      try {
+        let res = await fetch(`https://raw.githubusercontent.com/Varnan-Tech/${selectedRepo.name}/main/README.md`);
+        if (!res.ok) {
+          res = await fetch(`https://raw.githubusercontent.com/Varnan-Tech/${selectedRepo.name}/master/README.md`);
+        }
+        
+        if (res.ok) {
+          const text = await res.text();
+          setReadme(text);
+        } else {
+          setReadme("Failed to load README.");
+        }
+      } catch (error) {
+        setReadme("Failed to load README.");
+      } finally {
+        setIsLoadingReadme(false);
+      }
+    };
+
+    fetchReadme();
+  }, [selectedRepo]);
+
+  const handleCopyPrompt = (e: React.MouseEvent, repoName: string) => {
+    e.stopPropagation();
+    navigator.clipboard.writeText(`Agent: clone this repo https://github.com/Varnan-Tech/${repoName} and read the whole README.md file in that repository to understand how to use it. If there is anything you need, like an environment variable or any dependencies, ask your human agent for it.`);
+    toast.success("Copied prompt to clipboard!");
+  };
+
   return (
     <div className="w-full max-w-[1200px] mx-auto flex flex-col gap-12">
       <div className="flex flex-col gap-6">
@@ -194,7 +237,7 @@ export function BentoGrid({ repos }: BentoGridProps) {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: i * 0.05 }}
-              onClick={() => window.open(`https://github.com/Varnan-Tech/${item.name}`, "_blank")}
+              onClick={() => setSelectedRepo(item)}
               className="group relative flex flex-col p-6 bg-white hover:bg-white border border-black/[0.08] rounded-xl hover:border-[#856FE6]/40 hover:shadow-[0_0_15px_rgba(133,111,230,0.15)] transition-all duration-300 cursor-pointer min-h-[160px] overflow-hidden"
             >
               <div className="pointer-events-none absolute top-0 left-1/2 -mt-2 -ml-20 h-full w-full [mask-image:linear-gradient(white,transparent)] group-hover:opacity-100 transition-opacity duration-500 opacity-50 z-0">
@@ -244,6 +287,76 @@ export function BentoGrid({ repos }: BentoGridProps) {
           )})}
         </div>
       </div>
+
+      <AnimatePresence>
+        {selectedRepo && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setSelectedRepo(null)}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              onClick={(e) => e.stopPropagation()}
+              className="relative w-full max-w-3xl max-h-[85vh] bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col"
+            >
+              <div className="flex items-center justify-between p-6 border-b border-black/[0.08]">
+                <div className="flex items-center gap-3">
+                  <BrandIcon name={selectedRepo.name} />
+                  <a 
+                    href={`https://github.com/Varnan-Tech/${selectedRepo.name}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xl font-semibold hover:text-[#856FE6] transition-colors"
+                  >
+                    {selectedRepo.name}
+                  </a>
+                </div>
+                <button
+                  onClick={() => setSelectedRepo(null)}
+                  className="p-2 rounded-full hover:bg-black/5 transition-colors"
+                >
+                  <X className="w-5 h-5 text-black/50" />
+                </button>
+              </div>
+
+              <div className="flex-1 overflow-y-auto p-6">
+                <div className="mb-8 p-4 bg-black/[0.02] border border-black/[0.08] rounded-xl">
+                  <div className="flex items-center justify-between mb-2">
+                    <h4 className="text-sm font-medium text-black/70">Prompt Preview</h4>
+                    <button
+                      onClick={(e) => handleCopyPrompt(e, selectedRepo.name)}
+                      className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium text-black/60 hover:text-[#856FE6] hover:bg-[#856FE6]/10 rounded-md transition-colors"
+                    >
+                      <Copy className="w-3.5 h-3.5" />
+                      Copy Prompt
+                    </button>
+                  </div>
+                  <p className="text-sm text-black/60 font-mono leading-relaxed">
+                    Agent: clone this repo https://github.com/Varnan-Tech/{selectedRepo.name} and read the whole README.md file in that repository to understand how to use it. If there is anything you need, like an environment variable or any dependencies, ask your human agent for it.
+                  </p>
+                </div>
+
+                <div className="prose prose-sm md:prose-base max-w-none">
+                  {isLoadingReadme ? (
+                    <div className="flex items-center justify-center py-12">
+                      <div className="w-6 h-6 border-2 border-[#856FE6] border-t-transparent rounded-full animate-spin" />
+                    </div>
+                  ) : (
+                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                      {readme}
+                    </ReactMarkdown>
+                  )}
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
