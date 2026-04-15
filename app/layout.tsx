@@ -26,11 +26,24 @@ export const metadata: Metadata = {
   description:
     "The unified home for open-source agent skills, CLI utilities, and automation pipelines designed for autonomous agents like Claude Code, OpenCode, and Gemini.",
   keywords: ["autonomous agents", "open source", "MCP servers", "Claude Code", "OpenCode", "developer tools", "skills"],
+  icons: {
+    icon: "/favicon.png",
+    shortcut: "/favicon.png",
+    apple: "/favicon.png",
+  },
   openGraph: {
     title: "Open Directory | Agent Skills",
     description: "The unified home for open-source agent skills and automation pipelines designed for autonomous agents.",
     url: "https://opendirectory.dev",
     siteName: "Open Directory",
+    images: [
+      {
+        url: "/og-image.webp",
+        width: 1200,
+        height: 630,
+        alt: "Open Directory | Agent Skills",
+      },
+    ],
     locale: "en_US",
     type: "website",
   },
@@ -38,6 +51,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Open Directory | Agent Skills",
     description: "The unified home for open-source agent skills and automation pipelines designed for autonomous agents.",
+    images: ["/og-image.webp"],
   },
   robots: {
     index: true,
