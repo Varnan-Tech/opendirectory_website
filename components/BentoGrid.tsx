@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
@@ -74,18 +75,27 @@ function BrandIcon({ name }: { name: string }) {
     );
   }
   
-  if (lowerName.includes("reddit")) {
+  if (lowerName.includes("producthunt") || lowerName.includes("product-hunt")) {
     return (
-      <svg viewBox="0 0 216 216" className="w-5 h-5">
-        <path fill="#ff4500" d="M108 0C48.35 0 0 48.35 0 108c0 29.82 12.09 56.82 31.63 76.37l-20.57 20.57C6.98 209.02 9.87 216 15.64 216H108c59.65 0 108-48.35 108-108S167.65 0 108 0Z"/><circle cx="108" cy="128" r="72" fill="#fff"/>
+      <svg viewBox="0 0 40 40" className="w-5 h-5">
+        <path fill="#da552f" d="M40 20c0 11.045-8.955 20-20 20S0 31.045 0 20 8.955 0 20 0s20 8.955 20 20z"></path>
+        <path fill="#fff" d="M22.667 20H17v-6h5.667c1.73 0 3.133 1.403 3.133 3.133 0 1.73-1.403 3.134-3.133 3.134m0-9.333H13.667v18.666H17v-6h5.667c3.57 0 6.466-2.897 6.466-6.467 0-3.57-2.896-6.466-6.466-6.466"></path>
       </svg>
     );
   }
 
-  if (lowerName.includes("meta")) {
+  if (lowerName.includes("meta") || lowerName.includes("facebook") || lowerName.includes("ads")) {
     return (
-      <svg viewBox="0 0 24 24" className="w-5 h-5" fill="currentColor">
-        <path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm-3.11-8.5l-2.89 1.67L7.11 17l2.89-1.67v-3.33zm6.22 0v3.33L18 15.16l-1.11-1.93-2.89 1.67v-3.33l-2.89-1.67L12 8.16l-2.89 1.67L8 8.16l4-2.31 4 2.31-1.11 1.67-2.89-1.67v3.33l2.89 1.67z" fill="#0668E1"/>
+      <svg viewBox="0 0 24 24" className="w-5 h-5">
+        <path fill="#0668E1" d="M6.915 4.03c-1.968 0-3.683 1.28-4.871 3.113C.704 9.208 0 11.883 0 14.449c0 .706.07 1.369.21 1.973a7 7 0 0 0 .265.86a5.3 5.3 0 0 0 .371.761c.696 1.159 1.818 1.927 3.593 1.927c1.497 0 2.633-.671 3.965-2.444c.76-1.012 1.144-1.626 2.663-4.32l.756-1.339l.186-.325c.061.1.121.196.183.3l2.152 3.595c.724 1.21 1.665 2.556 2.47 3.314c1.046.987 1.992 1.22 3.06 1.22c1.075 0 1.876-.355 2.455-.843a3.7 3.7 0 0 0 .81-.973c.542-.939.861-2.127.861-3.745c0-2.72-.681-5.357-2.084-7.45c-1.282-1.912-2.957-2.93-4.716-2.93c-1.047 0-2.088.467-3.053 1.308c-.652.57-1.257 1.29-1.82 2.05c-.69-.875-1.335-1.547-1.958-2.056c-1.182-.966-2.315-1.303-3.454-1.303zm10.16 2.053c1.147 0 2.188.758 2.992 1.999c1.132 1.748 1.647 4.195 1.647 6.4c0 1.548-.368 2.9-1.839 2.9c-.58 0-1.027-.23-1.664-1.004c-.496-.601-1.343-1.878-2.832-4.358l-.617-1.028a45 45 0 0 0-1.255-1.98c.07-.109.141-.224.211-.327c1.12-1.667 2.118-2.602 3.358-2.602zm-10.201.553c1.265 0 2.058.791 2.675 1.446c.307.327.737.871 1.234 1.579l-1.02 1.566c-.757 1.163-1.882 3.017-2.837 4.338c-1.191 1.649-1.81 1.817-2.486 1.817c-.524 0-1.038-.237-1.383-.794c-.263-.426-.464-1.13-.464-2.046c0-2.221.63-4.535 1.66-6.088c.454-.687.964-1.226 1.533-1.533a2.26 2.26 0 0 1 1.088-.285"/>
+      </svg>
+    );
+  }
+
+  if (lowerName.includes("reddit")) {
+    return (
+      <svg viewBox="0 0 24 24" className="w-5 h-5">
+        <path fill="#FF4500" d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.562-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.688-.561-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/>
       </svg>
     );
   }
@@ -139,48 +149,117 @@ function CategoryTags({ name, description }: { name: string, description: string
 }
 
 function InstallButton({ name }: { name: string }) {
+  const [isOpen, setIsOpen] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [selectedPlatform, setSelectedPlatform] = useState("opencode");
 
-  const handleCopy = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    navigator.clipboard.writeText(`Agent: clone this repo https://github.com/Varnan-Tech/${name} and read the whole README.md file in that repository to understand how to use it. If there is anything you need, like an environment variable or any dependencies, ask your human agent for it.`);
-    toast.success("Copied prompt to clipboard!");
+  const platforms = [
+    { id: "opencode", name: "OpenCode", flag: "opencode" },
+    { id: "claude", name: "Claude Code", flag: "claude" },
+    { id: "openclaw", name: "OpenClaw", flag: "openclaw" },
+    { id: "hermes", name: "Hermes Agent", flag: "hermes" },
+    { id: "antigravity", name: "Anti-Gravity", flag: "antigravity" },
+    { id: "gemini", name: "Gemini CLI", flag: "gemini" },
+  ];
+
+  const getCommandText = (platform: string, repoName: string) => {
+    if (platform === "claude") {
+      return `/plugin install ${repoName}@opendirectory-marketplace`;
+    }
+    return `npx "@opendirectory.dev/skills" install ${repoName} --target ${platform}`;
+  };
+
+  const executeCopy = (e?: React.MouseEvent, flag?: string) => {
+    if (e) e.stopPropagation();
+    const targetFlag = flag || selectedPlatform;
+    const command = getCommandText(targetFlag, name);
+    navigator.clipboard.writeText(command);
+    toast.success(`Copied command for ${platforms.find(p => p.flag === targetFlag)?.name}!`);
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    setTimeout(() => {
+      setCopied(false);
+      setIsOpen(false);
+    }, 1500);
+  };
+
+  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const val = e.target.value;
+    setSelectedPlatform(val);
+    executeCopy(undefined, val);
   };
 
   return (
-    <button 
-      onClick={handleCopy}
-      className="absolute bottom-6 right-6 p-1.5 rounded-md bg-black/5 hover:bg-[#856FE6]/10 text-black/40 hover:text-[#856FE6] border border-black/5 hover:border-[#856FE6]/30 transition-all z-20 group/btn"
-      title="Copy agent prompt"
-    >
-      <AnimatePresence mode="wait">
-        {copied ? (
+    <>
+      <button 
+        onClick={(e) => { e.stopPropagation(); setIsOpen(true); }}
+        className="p-1.5 rounded-md bg-black/5 hover:bg-[#856FE6]/10 text-black/40 hover:text-[#856FE6] border border-black/5 hover:border-[#856FE6]/30 transition-all z-20 relative group/btn flex items-center justify-center shrink-0"
+        title="Copy install command"
+      >
+        <Copy className="w-3.5 h-3.5" />
+        <div className="absolute right-full mr-2 top-1/2 -translate-y-1/2 px-2 py-1 bg-black text-white text-[10px] rounded opacity-0 group-hover/btn:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
+          Install Skill
+        </div>
+      </button>
+
+      <AnimatePresence>
+        {isOpen && (
           <motion.div
-            key="check"
-            initial={{ scale: 0.5, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.5, opacity: 0 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={(e) => { e.stopPropagation(); setIsOpen(false); }}
+            className="fixed inset-0 z-[120] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm"
           >
-            <Check className="w-3.5 h-3.5 text-green-500" />
-          </motion.div>
-        ) : (
-          <motion.div
-            key="copy"
-            initial={{ scale: 0.5, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.5, opacity: 0 }}
-          >
-            <Copy className="w-3.5 h-3.5" />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 10 }}
+              onClick={(e) => e.stopPropagation()}
+              className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md flex flex-col relative overflow-hidden"
+            >
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#856FE6]/20 via-[#856FE6] to-[#856FE6]/20" />
+              
+              <div className="flex justify-between items-center mb-6">
+                <h3 className="text-xl font-bold text-black tracking-tight">Select Target Platform</h3>
+                <button onClick={() => setIsOpen(false)} className="p-1.5 hover:bg-black/5 rounded-full transition-colors">
+                  <X className="w-5 h-5 text-black/50" />
+                </button>
+              </div>
+              
+              <p className="text-[14px] text-black/70 leading-relaxed mb-6">
+                Choose your autonomous AI agent from the dropdown below. The installation command for <strong className="text-black font-mono font-medium">{name}</strong> will be automatically copied.
+              </p>
+
+              <div className="flex flex-col gap-4">
+                <div className="flex items-center gap-3">
+                  <select
+                    value={selectedPlatform}
+                    onChange={handleSelectChange}
+                    className="flex-1 bg-white border border-black/10 rounded-lg px-4 py-3 text-[14px] font-medium text-black focus:outline-none focus:ring-2 focus:ring-[#856FE6]/30 hover:border-black/20 transition-colors cursor-pointer appearance-none"
+                    style={{ backgroundImage: `url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23000000%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 1rem top 50%', backgroundSize: '0.65rem auto' }}
+                  >
+                    {platforms.map(p => (
+                      <option key={p.id} value={p.flag}>{p.name}</option>
+                    ))}
+                  </select>
+                  <button
+                    onClick={(e) => executeCopy(e)}
+                    className="flex items-center justify-center gap-2 px-5 py-3 bg-[#856FE6] hover:bg-[#856FE6]/90 text-white rounded-lg text-[14px] font-medium transition-colors shrink-0 shadow-sm"
+                  >
+                    {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                    {copied ? "Copied!" : "Copy"}
+                  </button>
+                </div>
+                
+                <div className="bg-black text-white/90 p-4 rounded-lg font-mono text-[12px] overflow-hidden whitespace-nowrap overflow-ellipsis mt-2">
+                  {getCommandText(selectedPlatform, name)}
+                </div>
+              </div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
-      
-      <div className="absolute right-full mr-2 top-1/2 -translate-y-1/2 px-2 py-1 bg-black text-white text-[10px] rounded opacity-0 group-hover/btn:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
-        {copied ? "Copied!" : "Copy prompt"}
-      </div>
-    </button>
+    </>
   );
 }
 
@@ -206,6 +285,8 @@ export function BentoGrid({ repos }: BentoGridProps) {
   const [isLoadingReadme, setIsLoadingReadme] = useState(false);
   const [copiedPrompt, setCopiedPrompt] = useState(false);
 
+  const [modalTarget, setModalTarget] = useState("opencode");
+
   useEffect(() => {
     if (!selectedRepo) {
       setReadme("");
@@ -215,9 +296,9 @@ export function BentoGrid({ repos }: BentoGridProps) {
     const fetchReadme = async () => {
       setIsLoadingReadme(true);
       try {
-        let res = await fetch(`https://raw.githubusercontent.com/Varnan-Tech/${selectedRepo.name}/main/README.md`);
+        let res = await fetch(`https://raw.githubusercontent.com/Varnan-Tech/opendirectory/main/skills/${selectedRepo.name}/README.md`);
         if (!res.ok) {
-          res = await fetch(`https://raw.githubusercontent.com/Varnan-Tech/${selectedRepo.name}/master/README.md`);
+          res = await fetch(`https://raw.githubusercontent.com/Varnan-Tech/opendirectory/master/skills/${selectedRepo.name}/README.md`);
         }
         
         if (res.ok) {
@@ -236,10 +317,14 @@ export function BentoGrid({ repos }: BentoGridProps) {
     fetchReadme();
   }, [selectedRepo]);
 
-  const handleCopyPrompt = (e: React.MouseEvent, repoName: string) => {
+  const handleCopyPrompt = (e: React.MouseEvent, repoName: string, target: string = "opencode") => {
     e.stopPropagation();
-    navigator.clipboard.writeText(`Agent: clone this repo https://github.com/Varnan-Tech/${repoName} and read the whole README.md file in that repository to understand how to use it. If there is anything you need, like an environment variable or any dependencies, ask your human agent for it.`);
-    toast.success("Copied prompt to clipboard!");
+    let command = `npx "@opendirectory.dev/skills" install ${repoName} --target ${target}`;
+    if (target === "claude") {
+      command = `/plugin install ${repoName}@opendirectory-marketplace`;
+    }
+    navigator.clipboard.writeText(command);
+    toast.success("Copied install command to clipboard!");
     setCopiedPrompt(true);
     setTimeout(() => setCopiedPrompt(false), 2000);
   };
@@ -254,7 +339,7 @@ export function BentoGrid({ repos }: BentoGridProps) {
           </a>
         </div>
         
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div className="flex flex-col gap-2 w-full">
           {repos && repos.map((item, i) => {
             const p = genRandomPattern(item.name, 3);
             return (
@@ -263,59 +348,56 @@ export function BentoGrid({ repos }: BentoGridProps) {
               initial={{ opacity: 0, y: 10 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: i * 0.05 }}
+              transition={{ duration: 0.2, delay: i * 0.02 }}
               onClick={() => setSelectedRepo(item)}
-              className="group relative flex flex-col p-6 bg-white hover:bg-white border border-black/[0.08] rounded-xl hover:border-[#856FE6]/40 hover:shadow-[0_0_15px_rgba(133,111,230,0.15)] transition-all duration-300 cursor-pointer min-h-[160px] overflow-hidden"
+              className="group flex flex-col md:flex-row md:items-center justify-between p-4 bg-white border border-black/[0.08] rounded-xl hover:border-[#856FE6]/40 hover:shadow-[0_0_15px_rgba(133,111,230,0.1)] transition-all duration-200 cursor-pointer"
             >
-              <div className="pointer-events-none absolute top-0 left-1/2 -mt-2 -ml-20 h-full w-full [mask-image:linear-gradient(white,transparent)] group-hover:opacity-100 transition-opacity duration-500 opacity-50 z-0">
-                <div className="absolute inset-0 bg-gradient-to-r from-black/[0.02] to-black/[0.01] [mask-image:radial-gradient(farthest-side_at_top,white,transparent)]">
-                  <GridPattern
-                    width={20}
-                    height={20}
-                    x="-12"
-                    y="4"
-                    squares={p}
-                    className="absolute inset-0 h-full w-full mix-blend-overlay fill-[#856FE6]/5 stroke-black/5 group-hover:fill-[#856FE6]/10 transition-colors"
-                  />
+              <div className="flex items-start gap-4 flex-1 min-w-0">
+                <div className="hidden md:flex mt-1 text-black/30 font-mono text-[12px] min-w-[24px]">
+                  {(i + 1).toString().padStart(2, '0')}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-3 mb-1.5">
+                    <BrandIcon name={item.name} />
+                    <h4 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        window.open(`https://github.com/Varnan-Tech/opendirectory/tree/main/skills/${item.name}`, '_blank');
+                      }}
+                      className="text-[15px] font-mono font-semibold text-black/80 group-hover:text-[#856FE6] tracking-tight transition-colors break-all"
+                    >
+                      {item.name}
+                    </h4>
+                    <span className="hidden sm:inline-block text-[12px] text-black/40 font-mono">
+                      Varnan-Tech/skills
+                    </span>
+                    <CategoryTags name={item.name} description={item.description} />
+                  </div>
+                  <p className="text-[13px] text-black/60 leading-relaxed font-normal truncate max-w-full">
+                    {item.description || "Open source agent skill pipeline and automation logic."}
+                  </p>
                 </div>
               </div>
-
-              <div className="absolute inset-0 bg-gradient-to-br from-[#856FE6]/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
               
-              <div className="flex items-center gap-3 mb-3 relative z-10">
-                <BrandIcon name={item.name} />
-                <h4 
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    window.open(`https://github.com/Varnan-Tech/${item.name}`, '_blank');
-                  }}
-                  className="text-[15px] font-mono font-semibold text-black/80 group-hover:text-[#856FE6] tracking-tight transition-colors break-all"
-                >
-                  {item.name}
-                </h4>
-                <CategoryTags name={item.name} description={item.description} />
+              <div className="flex items-center gap-6 mt-4 md:mt-0 pl-[40px] md:pl-4">
+                <div className="flex items-center gap-4 text-[12px] font-medium text-black/40">
+                  {item.stars > 0 || item.forks > 0 ? (
+                    <>
+                      <div className="flex items-center gap-1 group-hover:text-[#856FE6] transition-colors">
+                        <StarIcon />
+                        <span>{item.stars}</span>
+                      </div>
+                      <div className="flex items-center gap-1 group-hover:text-[#856FE6] transition-colors">
+                        <ForkIcon />
+                        <span>{item.forks}</span>
+                      </div>
+                    </>
+                  ) : null}
+                </div>
+                <div className="relative z-20">
+                  <InstallButton name={item.name} />
+                </div>
               </div>
-              
-              <p className="text-[13px] text-black/70 leading-relaxed font-normal mb-6 flex-1 relative z-10 max-w-[85%] pr-8">
-                {item.description || "Open source agent skill pipeline and automation logic."}
-              </p>
-              
-              <div className="flex items-center gap-5 text-[12px] font-medium text-black/50 relative z-10">
-                {item.stars > 0 || item.forks > 0 ? (
-                  <>
-                    <div className="flex items-center gap-1 group-hover:text-[#856FE6] transition-colors">
-                      <StarIcon />
-                      <span>{item.stars}</span>
-                    </div>
-                    <div className="flex items-center gap-1 group-hover:text-[#856FE6] transition-colors">
-                      <ForkIcon />
-                      <span>{item.forks}</span>
-                    </div>
-                  </>
-                ) : null}
-              </div>
-
-              <InstallButton name={item.name} />
             </motion.div>
           )})}
         </div>
@@ -328,7 +410,7 @@ export function BentoGrid({ repos }: BentoGridProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setSelectedRepo(null)}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+            className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
           >
             <motion.div
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
@@ -341,7 +423,7 @@ export function BentoGrid({ repos }: BentoGridProps) {
                 <div className="flex items-center gap-3">
                   <BrandIcon name={selectedRepo.name} />
                   <a 
-                    href={`https://github.com/Varnan-Tech/${selectedRepo.name}`}
+                    href={`https://github.com/Varnan-Tech/opendirectory/tree/main/skills/${selectedRepo.name}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-xl font-semibold hover:text-[#856FE6] transition-colors"
@@ -359,19 +441,42 @@ export function BentoGrid({ repos }: BentoGridProps) {
 
               <div className="flex-1 overflow-y-auto p-6">
                 <div className="mb-8 p-4 bg-black/[0.02] border border-black/[0.08] rounded-xl">
-                  <div className="flex items-center justify-between mb-2">
-                    <h4 className="text-sm font-medium text-black/70">Prompt Preview</h4>
-                    <button
-                      onClick={(e) => handleCopyPrompt(e, selectedRepo.name)}
-                      className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium text-black/60 hover:text-[#856FE6] hover:bg-[#856FE6]/10 rounded-md transition-colors"
-                    >
-                      {copiedPrompt ? <Check className="w-3.5 h-3.5 text-green-500" /> : <Copy className="w-3.5 h-3.5" />}
-                      {copiedPrompt ? "Copied!" : "Copy Prompt"}
-                    </button>
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-3 gap-3">
+                    <h4 className="text-[13px] font-semibold text-black/70 uppercase tracking-wider">Install Command</h4>
+                    <div className="flex items-center gap-2 w-full sm:w-auto">
+                      <select
+                        value={modalTarget}
+                        onChange={(e) => setModalTarget(e.target.value)}
+                        className="text-[13px] font-medium bg-white border border-black/10 rounded-md px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-[#856FE6]/30 text-black/80 hover:bg-black/[0.02] transition-colors cursor-pointer w-full sm:w-auto"
+                      >
+                        <option value="opencode">OpenCode</option>
+                        <option value="claude">Claude Code</option>
+                        <option value="openclaw">OpenClaw</option>
+                        <option value="hermes">Hermes Agent</option>
+                        <option value="antigravity">Anti-Gravity</option>
+                        <option value="gemini">Gemini CLI</option>
+                      </select>
+                      <button
+                        onClick={(e) => handleCopyPrompt(e, selectedRepo.name, modalTarget)}
+                        className="flex items-center justify-center gap-1.5 px-3 py-1.5 text-[13px] font-medium text-black/60 hover:text-[#856FE6] hover:bg-[#856FE6]/10 rounded-md transition-colors shrink-0 border border-transparent hover:border-[#856FE6]/20"
+                      >
+                        {copiedPrompt ? <Check className="w-3.5 h-3.5 text-green-500" /> : <Copy className="w-3.5 h-3.5" />}
+                        {copiedPrompt ? "Copied!" : "Copy"}
+                      </button>
+                    </div>
                   </div>
-                  <p className="text-sm text-black/60 font-mono leading-relaxed">
-                    Agent: clone this repo https://github.com/Varnan-Tech/{selectedRepo.name} and read the whole README.md file in that repository to understand how to use it. If there is anything you need, like an environment variable or any dependencies, ask your human agent for it.
-                  </p>
+                  <div className="bg-black text-white p-4 rounded-xl font-mono text-[13px] leading-relaxed overflow-x-auto shadow-inner select-all relative group/code whitespace-pre-wrap break-all">
+                    {modalTarget === "claude" ? `/plugin install ${selectedRepo.name}@opendirectory-marketplace` : `npx "@opendirectory.dev/skills" install ${selectedRepo.name} --target ${modalTarget}`}
+                    <div className="absolute top-2 right-2 opacity-0 group-hover/code:opacity-100 transition-opacity">
+                      <button
+                        onClick={(e) => handleCopyPrompt(e, selectedRepo.name, modalTarget)}
+                        className="p-1.5 rounded-md bg-white/10 hover:bg-white/20 text-white/60 hover:text-white transition-colors"
+                        title="Copy to clipboard"
+                      >
+                        {copiedPrompt ? <Check className="w-3.5 h-3.5 text-green-400" /> : <Copy className="w-3.5 h-3.5" />}
+                      </button>
+                    </div>
+                  </div>
                 </div>
 
                 <div className="prose prose-sm md:prose-base max-w-none">
@@ -380,12 +485,19 @@ export function BentoGrid({ repos }: BentoGridProps) {
                       <div className="w-6 h-6 border-2 border-[#856FE6] border-t-transparent rounded-full animate-spin" />
                     </div>
                   ) : (
-                    <div className="prose prose-sm md:prose-base max-w-none text-black">
+                    <div className="prose prose-sm md:prose-base max-w-none text-black prose-pre:bg-[#0d1117] prose-pre:border prose-pre:border-black/10 prose-pre:m-0 prose-pre:p-4 prose-pre:rounded-xl prose-code:bg-transparent prose-code:px-0 prose-code:text-[#c9d1d9] prose-headings:text-black prose-a:text-[#856FE6] prose-strong:text-black prose-img:inline-block prose-img:m-1">
                       <ReactMarkdown 
                         remarkPlugins={[remarkGfm]} 
                         rehypePlugins={[rehypeRaw, rehypeHighlight]}
                         components={{
-                          img: ({ ...props }) => <img {...props} alt={props.alt || ""} className="max-w-full rounded-lg" />,
+                          img: ({ node, src, alt, ...props }: any) => {
+                            let finalSrc = src;
+                            if (src && !src.startsWith("http") && !src.startsWith("data:")) {
+                              const cleanSrc = src.startsWith("/") ? src.slice(1) : src;
+                              finalSrc = `https://raw.githubusercontent.com/Varnan-Tech/opendirectory/main/skills/${selectedRepo.name}/${cleanSrc}`;
+                            }
+                            return <img src={finalSrc} alt={alt || ""} className="max-w-full rounded-lg my-4" {...props} />;
+                          },
                           video: ({ ...props }) => <video {...props} className="max-w-full rounded-lg" controls />
                         }}
                       >

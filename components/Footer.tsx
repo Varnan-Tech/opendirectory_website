@@ -19,7 +19,7 @@ export function Footer() {
             <h4 className="text-[13px] font-medium text-black mb-4 tracking-tight">Resources</h4>
             <ul className="space-y-3 text-[13px] font-normal text-black/50">
               <li><a href="/docs" className="hover:text-black transition-colors">Documentation</a></li>
-              <li><a href="https://github.com/Varnan-Tech" target="_blank" rel="noopener noreferrer" className="hover:text-black transition-colors">GitHub</a></li>
+              <li><a href="https://github.com/Varnan-Tech/opendirectory" target="_blank" rel="noopener noreferrer" className="hover:text-black transition-colors">GitHub</a></li>
             </ul>
           </div>
           

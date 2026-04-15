@@ -174,3 +174,13 @@ body {
     transform: scale(0.85);
   }
 }
+
+@keyframes flow {
+  to {
+    stroke-dashoffset: -24;
+  }
+}
+
+.animate-flow {
+  animation: flow 1s linear infinite;
+}

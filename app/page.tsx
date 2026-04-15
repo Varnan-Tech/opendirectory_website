@@ -8,6 +8,8 @@ import { AnimatedLogo } from "@/components/AnimatedLogo";
 import { LogoCloud } from "@/components/ui/logo-cloud-3";
 import { GitHubStarButton } from "@/components/GitHubStarButton";
 import { Spotlight } from "@/components/core/spotlight";
+import { ContributeAnimation } from "@/components/ContributeAnimation";
+import { FAQSection } from "@/components/FAQSection";
 import { GithubCopilot, Codex, Claude, GeminiCLI, Antigravity } from '@lobehub/icons';
 
 interface GitHubRepo {
@@ -51,93 +53,67 @@ function formatDistanceToNow(date: Date) {
 
 async function getGitHubStats(): Promise<GitHubRepo[]> {
   try {
-    const res = await fetch("https://api.github.com/orgs/Varnan-Tech/repos?type=public&per_page=100", {
+    // We now fetch the contents of the "skills" folder from the opendirectory repo
+    const res = await fetch("https://api.github.com/repos/Varnan-Tech/opendirectory/contents/skills", {
       next: { revalidate: 3600 },
     });
 
     if (!res.ok) return [];
 
-    const allRepos = await res.json();
-    const excludedRepos = ["Meta-Ads-MCP_PixelPay", "beehiiv-email-poll"];
+    const skillsFolders = await res.json();
     
-    const processedRepos = await Promise.all(allRepos.map(async (repo: {
-      name: string;
-      description: string;
-      language: string;
-      stargazers_count: number;
-      forks_count: number;
-      updated_at: string;
-      fork: boolean;
-      archived: boolean;
-      topics?: string[];
-    }) => {
-      if (repo.fork || repo.archived || excludedRepos.includes(repo.name)) return null;
-
-      let isSkill = repo.topics?.some((t: string) => t.includes('skill') || t.includes('scraper')) || 
-                    repo.name.toLowerCase().includes('skill') || 
-                    repo.name.toLowerCase().includes('scraper');
+    // We need to fetch details for each skill (from package.json and GitHub repo stats if exists)
+    // Since skills are folders, we can use their names and fetch package.json to get description
+    const processedRepos = await Promise.all(skillsFolders.map(async (folder: any) => {
+      if (folder.type !== "dir") return null;
       
-      let description = repo.description;
-      let topics = repo.topics || [];
-
-      if (!isSkill || !description || topics.length === 0) {
-        try {
-          const readmeRes = await fetch(`https://raw.githubusercontent.com/Varnan-Tech/${repo.name}/main/README.md`, {
-            next: { revalidate: 3600 }
-          });
-          
-          let readmeText = "";
-          if (readmeRes.ok) {
-            readmeText = await readmeRes.text();
-          } else {
-            const masterRes = await fetch(`https://raw.githubusercontent.com/Varnan-Tech/${repo.name}/master/README.md`, {
-              next: { revalidate: 3600 }
-            });
-            if (masterRes.ok) {
-              readmeText = await masterRes.text();
-            }
-          }
-
-          if (readmeText) {
-            if (!isSkill) {
-              const lowerReadme = readmeText.toLowerCase();
-              if (lowerReadme.includes('skill') || lowerReadme.includes('agent') || lowerReadme.includes('mcp')) {
-                isSkill = true;
-              }
-            }
-
-            if (!description) {
-              const lines = readmeText.split('\\n');
-              for (const line of lines) {
-                const trimmed = line.trim();
-                if (trimmed && !trimmed.startsWith('#') && !trimmed.startsWith('<') && !trimmed.startsWith('![')) {
-                  description = trimmed;
-                  break;
-                }
-              }
-            }
-
-            const tagsMatch = readmeText.match(/Tags:\\s*(.+)/i);
-            if (tagsMatch && tagsMatch[1]) {
-              const extraTags = tagsMatch[1].split(',').map(t => t.trim().toLowerCase());
-              topics = [...new Set([...topics, ...extraTags])];
-            }
-          }
-        } catch (e) {
-          console.error(`Error fetching README for ${repo.name}:`, e);
+      const skillName = folder.name;
+      let description = "Open source agent skill pipeline and automation logic.";
+      let topics: string[] = [];
+      let stars = 0;
+      let forks = 0;
+      let language = "TypeScript";
+      let updatedAt = new Date().toISOString();
+      
+      try {
+        // Try to fetch package.json for description
+        const pkgRes = await fetch(`https://raw.githubusercontent.com/Varnan-Tech/opendirectory/main/skills/${skillName}/package.json`, {
+          next: { revalidate: 3600 }
+        });
+        
+        if (pkgRes.ok) {
+          const pkg = await pkgRes.json();
+          if (pkg.description) description = pkg.description;
+          if (pkg.keywords) topics = pkg.keywords;
+        } else {
+           // Fallback to README
+           const readmeRes = await fetch(`https://raw.githubusercontent.com/Varnan-Tech/opendirectory/main/skills/${skillName}/README.md`, {
+             next: { revalidate: 3600 }
+           });
+           if (readmeRes.ok) {
+             const readmeText = await readmeRes.text();
+             const lines = readmeText.split('\\n');
+             for (const line of lines) {
+               const trimmed = line.trim();
+               if (trimmed && !trimmed.startsWith('#') && !trimmed.startsWith('<') && !trimmed.startsWith('![')) {
+                 description = trimmed;
+                 break;
+               }
+             }
+           }
         }
+      } catch (e) {
+        console.error(`Error fetching details for ${skillName}:`, e);
       }
 
-      if (!isSkill) return null;
-
       return {
-        name: repo.name,
-        description: description || "Open source agent skill pipeline and automation logic.",
-        language: repo.language || "Unknown",
-        languageColor: getLanguageColor(repo.language || "Unknown"),
-        stars: repo.stargazers_count,
-        forks: repo.forks_count,
-        updatedAt: formatDistanceToNow(new Date(repo.updated_at)) + " ago",
+        name: skillName,
+        description,
+        language,
+        languageColor: getLanguageColor(language),
+        stars,
+        forks,
+        updatedAt: "recently", // Simplified for directory-based skills
         topics
       };
     }));
@@ -170,7 +146,7 @@ export default async function Home() {
       <section className="relative w-full z-10 overflow-hidden">
         <div className="absolute inset-0 bg-hero-net pointer-events-none z-0" />
 
-        <div className="w-full max-w-[1300px] mx-auto px-6 pt-20 pb-24 relative z-10">
+        <div className="w-full max-w-[1300px] mx-auto px-6 pt-20 pb-24 relative z-20">
           <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
             <div className="flex-1 lg:flex-[0.45] flex flex-col items-start gap-6 min-w-0">
               <AnimatedHero />
@@ -224,7 +200,7 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="relative mx-auto w-full max-w-5xl py-12 z-10 flex flex-col md:flex-row items-center gap-8 px-6">
+      <section className="relative mx-auto w-full max-w-5xl py-12 z-20 flex flex-col md:flex-row items-center gap-8 px-6">
         <h2 className="whitespace-nowrap font-medium text-black/60 text-xl tracking-tight">
           Works everywhere you do
         </h2>
@@ -233,7 +209,7 @@ export default async function Home() {
         </div>
       </section>
 
-      <section id="skills" className="w-full max-w-[1200px] mx-auto px-6 py-32 z-10 relative">
+      <section id="skills" className="w-full max-w-[1200px] mx-auto px-6 py-32 z-30 relative bg-[#FAFAFA] rounded-[40px] mb-24">
         <div className="flex flex-col gap-16">
           <div className="max-w-2xl">
             <h2 className="text-3xl md:text-4xl font-medium tracking-tighter mb-4 text-black">
@@ -247,6 +223,35 @@ export default async function Home() {
           <FilterableSkills initialRepos={repos as GitHubRepo[]} />
         </div>
       </section>
+
+      <section className="w-full max-w-[1200px] mx-auto px-6 py-24 z-10 relative border-t border-black/[0.05] bg-white">
+        <div className="flex flex-col items-center justify-center text-center gap-8">
+          <ContributeAnimation />
+          
+          <h2 className="text-3xl md:text-4xl font-medium tracking-tighter text-black">
+            Contribute to Open Directory
+          </h2>
+          
+          <p className="text-black/60 text-lg max-w-2xl leading-relaxed">
+            Have you built an innovative skill or pipeline? Join our open-source ecosystem and share it with the world. We welcome contributions that help autonomous agents do more.
+          </p>
+          
+          <div className="flex gap-4 mt-4">
+            <a href="https://github.com/Varnan-Tech/opendirectory/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener noreferrer">
+              <Button variant="solid" size="lg" className="font-medium tracking-tight bg-black text-white hover:bg-black/80">
+                View Guidelines
+              </Button>
+            </a>
+            <a href="https://github.com/Varnan-Tech/opendirectory" target="_blank" rel="noopener noreferrer">
+              <Button variant="ghost" size="lg" neon={true} className="font-medium tracking-tight border border-black/10 text-black hover:bg-black/5 bg-transparent">
+                Go to GitHub
+              </Button>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <FAQSection />
 
       <Footer />
     </main>

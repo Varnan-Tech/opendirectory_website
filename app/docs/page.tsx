@@ -1,6 +1,7 @@
 import React from "react";
 import { Footer } from "@/components/Footer";
 import { AnimatedLogo } from "@/components/AnimatedLogo";
+import { DocsAnimation } from "@/components/DocsAnimation";
 import Link from "next/link";
 
 export default function DocsPage() {
@@ -28,65 +29,241 @@ export default function DocsPage() {
               Learn how to integrate our open-source agent skills and automation pipelines into your autonomous agents.
             </p>
 
+            <DocsAnimation />
+
             <h2 className="text-2xl font-semibold tracking-tight mt-12 mb-6 border-b border-black/10 pb-4">
-              How to Use Our Skills
+              Step-by-Step Installation Guide
             </h2>
             
             <p className="text-black/80 leading-relaxed mb-6">
-              Our skills are designed to be consumed directly by autonomous agents (like Claude Code, AutoGPT, or custom MCP servers). We do not require complex npm package installations. Instead, we use a direct repository cloning approach.
+              Our skills are designed to be consumed directly by autonomous AI agents (like Claude Code, OpenCode, Codex, or Gemini CLI). You don't need to be a software engineer to install these! 
             </p>
 
-            <div className="bg-black/5 border border-black/10 rounded-xl p-8 mb-8">
-              <h3 className="text-lg font-medium tracking-tight mb-4">The Universal Agent Prompt</h3>
-              <p className="text-black/70 mb-4 text-sm">
-                To equip your agent with any of our skills, simply provide it with the following prompt format. Replace <code>[REPO_NAME]</code> with the specific skill you want to use.
+            <h2 className="text-2xl font-semibold tracking-tight mt-12 mb-6 border-b border-black/10 pb-4">
+              Native Installation (Claude Code Only)
+            </h2>
+            <div className="bg-[#856FE6]/5 border border-[#856FE6]/20 rounded-xl p-8 mb-12">
+              <p className="text-black/80 leading-relaxed mb-6">
+                Users who exclusively use Anthropic's Claude Code can add Open Directory as a native community marketplace directly inside their Claude interface. This allows you to install skills using Claude's built-in plugin system.
               </p>
-              
-              <div className="bg-black text-white p-4 rounded-lg font-mono text-sm leading-relaxed overflow-x-auto">
-                Agent: clone this repo https://github.com/Varnan-Tech/[REPO_NAME] and read the whole README.md file in that repository to understand how to use it. If there is anything you need, like an environment variable or any dependencies, ask your human agent for it.
+              <div className="space-y-4">
+                <div>
+                  <h4 className="text-sm font-semibold text-black/70 mb-2">1. Add the Open Directory marketplace</h4>
+                  <div className="bg-black text-white p-4 rounded-lg font-mono text-sm shadow-inner">
+                    /plugin marketplace add Varnan-Tech/opendirectory
+                  </div>
+                </div>
+                <div>
+                  <h4 className="text-sm font-semibold text-black/70 mb-2">2. Install a skill directly</h4>
+                  <div className="bg-black text-white p-4 rounded-lg font-mono text-sm shadow-inner">
+                    /plugin install [SKILL-NAME]@opendirectory-marketplace
+                  </div>
+                </div>
               </div>
             </div>
 
-            <h3 className="text-xl font-semibold tracking-tight mt-10 mb-4">
-              Why this approach?
-            </h3>
-            <ul className="space-y-4 text-black/80 list-disc pl-6">
-              <li>
-                <strong>Zero Configuration:</strong> Agents can read the repository's README to understand the skill's capabilities, input schema, and expected outputs automatically.
-              </li>
-              <li>
-                <strong>Always Up-to-Date:</strong> Your agent pulls the latest instructions and scripts directly from the source repository.
-              </li>
-              <li>
-                <strong>Context Awareness:</strong> By reading the README, the agent dynamically adjusts its own system prompt to properly utilize the skill.
-              </li>
-            </ul>
+            <h2 className="text-2xl font-semibold tracking-tight mt-12 mb-6 border-b border-black/10 pb-4">
+              Standard Installation (Other Agents)
+            </h2>
+            <p className="text-black/80 leading-relaxed mb-6">
+              For other agents like OpenCode, Hermes, or Codex, we use a convenient <code>npx</code> command to fetch and install skills directly into your AI agent.
+            </p>
+
+            <div className="relative space-y-12 mt-10 pb-4">
+              
+              <div className="absolute left-[19px] top-6 bottom-0 w-0.5 z-[-1]">
+                <svg className="w-full h-full" preserveAspectRatio="none">
+                  <line 
+                    x1="0" y1="0" x2="0" y2="100%" 
+                    stroke="url(#gradient)" 
+                    strokeWidth="2" 
+                    strokeDasharray="8 8" 
+                    className="animate-flow"
+                  />
+                  <defs>
+                    <linearGradient id="gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" stopColor="#856FE6" stopOpacity="0.1" />
+                      <stop offset="20%" stopColor="#856FE6" stopOpacity="1" />
+                      <stop offset="80%" stopColor="#856FE6" stopOpacity="1" />
+                      <stop offset="100%" stopColor="#856FE6" stopOpacity="0.1" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+              </div>
+
+              <div className="relative z-10">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="flex-none w-10 h-10 rounded-full bg-[#856FE6] text-white flex items-center justify-center font-bold text-lg shadow-md shadow-[#856FE6]/20">1</div>
+                  <h3 className="text-xl font-semibold tracking-tight m-0">Install Node.js (Prerequisite)</h3>
+                </div>
+                <div className="pl-14 text-black/80">
+                  <p className="mb-4">
+                    Before you can run the installation command, your computer needs a program called <strong>Node.js</strong>. It allows your computer to run the <code>npx</code> command.
+                  </p>
+                  <ul className="list-disc pl-5 space-y-2 mb-4">
+                    <li>Go to the official website: <a href="https://nodejs.org/" target="_blank" rel="noopener noreferrer" className="text-[#856FE6] hover:underline font-medium">nodejs.org</a></li>
+                    <li>Download the version labeled <strong>"Recommended For Most Users"</strong> (LTS).</li>
+                    <li>Open the downloaded file and click "Next" through the standard installation steps (you don't need to change any default settings).</li>
+                  </ul>
+                  <p className="text-sm text-black/60 italic">If you already have Node.js installed, you can skip this step entirely.</p>
+                </div>
+              </div>
+
+              <div className="relative z-10">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="flex-none w-10 h-10 rounded-full bg-[#856FE6] text-white flex items-center justify-center font-bold text-lg shadow-md shadow-[#856FE6]/20">2</div>
+                  <h3 className="text-xl font-semibold tracking-tight m-0">Find Your Skill & Copy the Command</h3>
+                </div>
+                <div className="pl-14 text-black/80">
+                  <p className="mb-4">
+                    Browse the Open Directory homepage to find the exact skill you want your AI to learn (for example, the <code>blog-cover-image-cli</code>).
+                  </p>
+                  <p className="mb-4">
+                    On the bottom right of every skill card, you will see a small <strong>copy icon</strong>. Click it! This will copy the exact magic command you need to your clipboard.
+                  </p>
+                  <div className="bg-black/5 border border-black/10 rounded-xl p-6">
+                    <p className="text-sm font-medium mb-3 text-black/60">The copied command will look like this:</p>
+                    <div className="bg-black text-white p-4 rounded-lg font-mono text-sm overflow-x-auto shadow-inner">
+                      npx "@opendirectory.dev/skills" install [SKILL-NAME] --target claude
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="relative z-10">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="flex-none w-10 h-10 rounded-full bg-[#856FE6] text-white flex items-center justify-center font-bold text-lg shadow-md shadow-[#856FE6]/20">3</div>
+                  <h3 className="text-xl font-semibold tracking-tight m-0">Open Your Terminal</h3>
+                </div>
+                <div className="pl-14 text-black/80">
+                  <p className="mb-4">
+                    You need to paste that command into your computer's "Terminal" or "Command Prompt".
+                  </p>
+                  <ul className="list-disc pl-5 space-y-2">
+                    <li><strong>Mac users:</strong> Press <code>Cmd + Space</code>, type "Terminal", and hit Enter.</li>
+                    <li><strong>Windows users:</strong> Press the Windows key, type "cmd" or "Command Prompt", and hit Enter.</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div className="relative z-10">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="flex-none w-10 h-10 rounded-full bg-[#856FE6] text-white flex items-center justify-center font-bold text-lg shadow-md shadow-[#856FE6]/20">4</div>
+                  <h3 className="text-xl font-semibold tracking-tight m-0">Paste & Press Enter</h3>
+                </div>
+                <div className="pl-14 text-black/80">
+                  <p className="mb-4">
+                    Once the black terminal window is open, simply paste the command you copied in Step 2. (On Windows, you can usually just right-click to paste). 
+                  </p>
+                  <p className="mb-4">
+                    Press <strong>Enter</strong>. You will see some text scrolling by as your computer reaches out to Open Directory and securely downloads the skill directly into your AI agent.
+                  </p>
+                  <div className="bg-green-50 border border-green-200 rounded-xl p-5 mt-4">
+                    <p className="text-green-800 font-medium text-sm flex items-center gap-2">
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
+                      Success!
+                    </p>
+                    <p className="text-green-700 text-sm mt-1">
+                      Once the text stops, the installation is complete. You can close the terminal window. Your AI agent now possesses the new skill and is ready to work!
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+            </div>
 
             <h2 className="text-2xl font-semibold tracking-tight mt-16 mb-6 border-b border-black/10 pb-4">
-              Example Workflow
+              Advanced: Selecting Your AI Target (npx only)
             </h2>
-            <div className="space-y-6">
-              <div className="flex gap-4">
-                <div className="flex-none w-8 h-8 rounded-full bg-[#856FE6]/10 text-[#856FE6] flex items-center justify-center font-bold text-sm">1</div>
+            <p className="text-black/80 leading-relaxed mb-6">
+              By default, the copied <code>npx</code> command targets <strong>OpenCode</strong>. If you are using a different AI agent, you can manually change the <code>--target</code> flag at the end of the command before pressing Enter.
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="border border-black/10 rounded-lg p-4 bg-white shadow-sm">
+                <p className="font-semibold text-black mb-1">OpenCode</p>
+                <code className="text-sm text-[#856FE6] bg-[#856FE6]/10 px-2 py-1 rounded">--target opencode</code>
+              </div>
+              <div className="border border-black/10 rounded-lg p-4 bg-white shadow-sm">
+                <p className="font-semibold text-black mb-1">Codex</p>
+                <code className="text-sm text-[#856FE6] bg-[#856FE6]/10 px-2 py-1 rounded">--target codex</code>
+              </div>
+              <div className="border border-black/10 rounded-lg p-4 bg-white shadow-sm">
+                <p className="font-semibold text-black mb-1">Gemini CLI</p>
+                <code className="text-sm text-[#856FE6] bg-[#856FE6]/10 px-2 py-1 rounded">--target gemini</code>
+              </div>
+              <div className="border border-black/10 rounded-lg p-4 bg-white shadow-sm">
+                <p className="font-semibold text-black mb-1">Anti-Gravity</p>
+                <code className="text-sm text-[#856FE6] bg-[#856FE6]/10 px-2 py-1 rounded">--target antigravity</code>
+              </div>
+            </div>
+
+            <h2 className="text-2xl font-semibold tracking-tight mt-16 mb-6 border-b border-black/10 pb-4">
+              How it works under the hood
+            </h2>
+            <p className="text-black/80 leading-relaxed mb-6">
+              When you run our <code>npx</code> command, the tool acts as a bridge between the open-source GitHub repository and your local AI environment. Here is exactly what happens in the background:
+            </p>
+            <ol className="list-decimal pl-5 space-y-4 text-black/80">
+              <li><strong>Registry Lookup:</strong> The CLI fetches the latest skill package definition from the Open Directory manifest.</li>
+              <li><strong>Secure Download:</strong> It downloads the prompt instructions, tool definitions (if any), and system guidelines associated with the skill.</li>
+              <li><strong>Target Injection:</strong> Depending on the <code>--target</code> flag you provided, it writes these definitions into your specific agent's local configuration file (e.g., <code>.claude.json</code> or your global MCP config).</li>
+              <li><strong>Context Priming:</strong> The skill is now "memorized" by your AI. The next time you open your agent, it automatically knows the exact steps, prompts, and APIs needed to execute the skill flawlessly.</li>
+            </ol>
+
+            <div className="bg-[#856FE6]/5 border border-[#856FE6]/20 rounded-xl p-8 mt-12 mb-8">
+              <h3 className="text-lg font-semibold tracking-tight mb-4 text-black">Frequently Asked Questions</h3>
+              
+              <div className="space-y-6">
                 <div>
-                  <h4 className="font-medium mb-2">Find a Skill</h4>
-                  <p className="text-black/70 text-sm">Browse the Open Directory homepage to find a skill that matches your needs (e.g., <code>blog-cover-image-cli</code>).</p>
+                  <h4 className="font-medium text-black">Do I need to be a developer to use these?</h4>
+                  <p className="text-sm text-black/70 mt-1">No! While the tools are used inside a terminal, the installation only requires copying and pasting one single line. The AI agent itself handles all the complex "developer" work for you.</p>
+                </div>
+                
+                <div>
+                  <h4 className="font-medium text-black">Are these skills free?</h4>
+                  <p className="text-sm text-black/70 mt-1">Yes, all skills hosted on Open Directory are open-source and free to use under the MIT License.</p>
+                </div>
+                
+                <div>
+                  <h4 className="font-medium text-black">What if my AI needs a password or API key?</h4>
+                  <p className="text-sm text-black/70 mt-1">Some advanced skills (like a Reddit scraper) might require an API key. When your AI agent attempts to use the skill, it will naturally pause and ask you: <em>"Please provide your API key to continue."</em> Simply paste it into the chat, and the AI will handle the rest securely.</p>
+                </div>
+
+                <div>
+                  <h4 className="font-medium text-black">Can I contribute my own skills?</h4>
+                  <p className="text-sm text-black/70 mt-1">Absolutely! Open Directory is a community-driven project. You can submit your own skills by opening a Pull Request on our GitHub repository. Check out our Contribution Guidelines for more details.</p>
+                </div>
+
+                <div>
+                  <h4 className="font-medium text-black">Which AI agents are supported?</h4>
+                  <p className="text-sm text-black/70 mt-1">Currently, we support Claude Code natively via the marketplace plugin, as well as OpenCode, Codex, Gemini CLI, and Anti-Gravity via the standard npx installation method.</p>
                 </div>
               </div>
-              <div className="flex gap-4">
-                <div className="flex-none w-8 h-8 rounded-full bg-[#856FE6]/10 text-[#856FE6] flex items-center justify-center font-bold text-sm">2</div>
-                <div>
-                  <h4 className="font-medium mb-2">Copy the Prompt</h4>
-                  <p className="text-black/70 text-sm">Click the copy icon on the skill card to copy the universal agent prompt to your clipboard.</p>
+            </div>
+
+            <h2 className="text-2xl font-semibold tracking-tight mt-16 mb-6 border-b border-black/10 pb-4">
+              Troubleshooting
+            </h2>
+            <div className="space-y-4">
+              <details className="group border border-black/10 rounded-lg bg-white overflow-hidden">
+                <summary className="flex cursor-pointer items-center justify-between px-6 py-4 font-medium text-black hover:bg-black/5 transition-colors">
+                  "npx is not recognized as an internal or external command"
+                  <span className="text-[#856FE6] group-open:-rotate-180 transition-transform">▼</span>
+                </summary>
+                <div className="px-6 pb-4 pt-0 text-black/70 text-sm">
+                  This error means Node.js is not installed on your computer, or your terminal hasn't recognized it yet. Please go back to Step 1 and download Node.js. If you just installed it, completely close your terminal window and open a new one to refresh it.
                 </div>
-              </div>
-              <div className="flex gap-4">
-                <div className="flex-none w-8 h-8 rounded-full bg-[#856FE6]/10 text-[#856FE6] flex items-center justify-center font-bold text-sm">3</div>
-                <div>
-                  <h4 className="font-medium mb-2">Paste to your Agent</h4>
-                  <p className="text-black/70 text-sm">Paste the prompt into your autonomous agent's chat or instruction field. The agent will clone the repo, read the instructions, and execute the skill.</p>
+              </details>
+              
+              <details className="group border border-black/10 rounded-lg bg-white overflow-hidden">
+                <summary className="flex cursor-pointer items-center justify-between px-6 py-4 font-medium text-black hover:bg-black/5 transition-colors">
+                  My AI agent says it doesn't know the skill
+                  <span className="text-[#856FE6] group-open:-rotate-180 transition-transform">▼</span>
+                </summary>
+                <div className="px-6 pb-4 pt-0 text-black/70 text-sm">
+                  Ensure you used the correct <code>--target</code> flag during installation. Also, you must completely restart your AI agent (close the window and reopen it) for it to load the newly installed skill configurations.
                 </div>
-              </div>
+              </details>
             </div>
 
           </div>

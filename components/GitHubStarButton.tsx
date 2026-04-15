@@ -3,6 +3,7 @@
 import React from "react";
 import { StarButton } from "@/components/ui/star-button";
 import { Star } from "lucide-react";
+import { motion } from "framer-motion";
 
 function GitHubIcon({ className }: { className?: string }) {
   return (
@@ -20,30 +21,43 @@ function GitHubIcon({ className }: { className?: string }) {
 export function GitHubStarButton({ repos }: { repos?: string[] }) {
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
-    if (repos && repos.length > 0) {
-      const randomRepo = repos[Math.floor(Math.random() * repos.length)];
-      window.open(`https://github.com/Varnan-Tech/${randomRepo}`, "_blank", "noopener,noreferrer");
-    } else {
-      window.open("https://github.com/Varnan-Tech", "_blank", "noopener,noreferrer");
-    }
+    window.open("https://github.com/Varnan-Tech/opendirectory", "_blank", "noopener,noreferrer");
   };
 
   return (
-    <a href="https://github.com/Varnan-Tech" onClick={handleClick} target="_blank" rel="noopener noreferrer">
+    <a href="https://github.com/Varnan-Tech/opendirectory" onClick={handleClick} target="_blank" rel="noopener noreferrer">
       <StarButton
         lightColor="#856FE6"
         backgroundColor="black"
         borderWidth={1}
-        className="rounded-3xl h-8 px-3.5 cursor-pointer hover:bg-black/80 transition-colors"
+        className="rounded-3xl h-8 px-3.5 cursor-pointer hover:bg-black/80 transition-colors group relative overflow-hidden"
       >
         <span 
-          className="flex items-center gap-1.5" 
+          className="flex items-center gap-1.5 relative z-10" 
           style={{ WebkitTextFillColor: "initial", color: "white" }}
         >
           <GitHubIcon className="w-3.5 h-3.5 text-white" />
-          <Star className="w-3 h-3 text-yellow-400 fill-yellow-400 animate-blink-star" />
-          <span className="text-xs font-medium text-white">Star our repo</span>
+          <motion.div
+            animate={{
+              rotate: [0, 10, -10, 0],
+              scale: [1, 1.2, 1],
+            }}
+            transition={{
+              duration: 2,
+              ease: "easeInOut",
+              repeat: Infinity,
+              repeatType: "reverse",
+            }}
+          >
+            <Star className="w-3.5 h-3.5 text-yellow-400 fill-yellow-400 drop-shadow-[0_0_5px_rgba(250,204,21,0.8)]" />
+          </motion.div>
+          <span className="text-xs font-medium text-white group-hover:text-yellow-100 transition-colors">Star our repo</span>
         </span>
+        <motion.div 
+          className="absolute inset-0 rounded-3xl bg-gradient-to-r from-transparent via-white/20 to-transparent w-[200%]" 
+          animate={{ x: ["-100%", "50%"] }}
+          transition={{ duration: 2.5, ease: "linear", repeat: Infinity }}
+        />
       </StarButton>
     </a>
   );

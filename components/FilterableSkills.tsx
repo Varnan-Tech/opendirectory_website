@@ -55,39 +55,64 @@ export function FilterableSkills({ initialRepos }: FilterableSkillsProps) {
   }, [initialRepos, searchQuery, activeTag]);
 
   return (
-    <div className="flex flex-col gap-8 w-full">
-      <div className="flex flex-col gap-4 w-full max-w-md">
+    <div className="flex flex-col lg:flex-row gap-10 w-full">
+      <div className="flex flex-col gap-6 w-full lg:w-64 shrink-0 lg:sticky lg:top-24 self-start">
+        <h3 className="text-xl font-bold tracking-tight text-black border-b border-black/[0.08] pb-3">Find Skills</h3>
+        
         <div className="relative w-full">
-          <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-            <Search className="h-5 w-5 text-black/40" />
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <Search className="h-4 w-4 text-black/40" />
           </div>
           <input
             type="text"
-            placeholder="Search skills by name, description, or tag"
+            placeholder="Search skills..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-11 pr-4 py-3 bg-white border border-black/[0.08] rounded-2xl text-[14px] text-black placeholder:text-black/40 focus:outline-none focus:ring-2 focus:ring-[#856FE6]/20 focus:border-[#856FE6]/40 transition-all shadow-sm"
+            className="w-full pl-9 pr-4 py-2.5 bg-black/5 border-transparent rounded-lg text-[13px] text-black placeholder:text-black/40 focus:outline-none focus:ring-2 focus:ring-[#856FE6]/30 focus:bg-white transition-all"
           />
         </div>
         
-        <div className="flex flex-nowrap overflow-x-auto gap-2 pb-2 scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-          {allTags.map(tag => (
-            <button
-              key={tag}
-              onClick={() => setActiveTag(tag)}
-              className={`px-4 py-1.5 rounded-full text-[13px] font-medium transition-all duration-200 ${
-                activeTag === tag 
-                  ? "bg-black text-white border border-black shadow-sm" 
-                  : "bg-white text-black/60 border border-black/[0.08] hover:border-black/20 hover:text-black hover:bg-black/5"
-              }`}
-            >
-              {tag}
-            </button>
-          ))}
+        <div>
+          <h4 className="text-[12px] font-semibold text-black/50 uppercase tracking-wider mb-3">Categories</h4>
+          <div className="flex flex-col gap-1.5">
+            {allTags.map(tag => (
+              <button
+                key={tag}
+                onClick={() => setActiveTag(tag)}
+                className={`px-3 py-1.5 rounded-md text-[13px] font-medium transition-all duration-200 text-left flex items-center justify-between ${
+                  activeTag === tag 
+                    ? "bg-[#856FE6]/10 text-[#856FE6]" 
+                    : "bg-transparent text-black/60 hover:bg-black/5 hover:text-black"
+                }`}
+              >
+                <span>{tag}</span>
+                <span className="text-[11px] opacity-50">
+                  {tag === "All" ? initialRepos.length : initialRepos.filter(r => getTagsForRepo(r).includes(tag)).length}
+                </span>
+              </button>
+            ))}
+          </div>
         </div>
       </div>
       
-      <BentoGrid repos={filteredRepos} />
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center justify-between mb-4 border-b border-black/[0.08] pb-2">
+          <div className="flex gap-4 text-[13px] font-mono text-black/40">
+            <span className="text-black font-semibold">All {filteredRepos.length}</span>
+            {allTags.filter(t => t !== "All" && t !== "Skill").slice(0, 6).map(t => (
+              <span key={t} className="hidden sm:inline-block cursor-pointer hover:text-black transition-colors" onClick={() => setActiveTag(t)}>
+                {t.toLowerCase()} {initialRepos.filter(r => getTagsForRepo(r).includes(t)).length}
+              </span>
+            ))}
+          </div>
+        </div>
+        <div className="relative">
+          <div className="max-h-[520px] overflow-y-auto pr-2 pb-8 [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-black/10 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-black/20">
+            <BentoGrid repos={filteredRepos} />
+          </div>
+          <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-[#FAFAFA] to-transparent z-10" />
+        </div>
+      </div>
     </div>
   );
 }
