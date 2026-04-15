@@ -21,9 +21,35 @@ const theaterFont = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Open Directory | Open-source tools, skills, and MCP servers",
+  metadataBase: new URL("https://opendirectory.dev"),
+  title: "Open Directory | Open-source agent skills and MCP servers",
   description:
-    "Open Directory is the home for Varnan's open-source tools, skills, MCP servers, and automation pipelines.",
+    "The unified home for open-source agent skills, CLI utilities, and automation pipelines designed for autonomous agents like Claude Code, OpenCode, and Gemini.",
+  keywords: ["autonomous agents", "open source", "MCP servers", "Claude Code", "OpenCode", "developer tools", "skills"],
+  openGraph: {
+    title: "Open Directory | Agent Skills",
+    description: "The unified home for open-source agent skills and automation pipelines designed for autonomous agents.",
+    url: "https://opendirectory.dev",
+    siteName: "Open Directory",
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Open Directory | Agent Skills",
+    description: "The unified home for open-source agent skills and automation pipelines designed for autonomous agents.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
 };
 
 export default function RootLayout({
