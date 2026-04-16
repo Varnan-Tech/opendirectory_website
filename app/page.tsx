@@ -5,6 +5,7 @@ import { FilterableSkills } from "@/components/FilterableSkills";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/neon-button";
 import { AnimatedLogo } from "@/components/AnimatedLogo";
+import { HeroVideo } from "@/components/HeroVideo";
 import { LogoCloud } from "@/components/ui/logo-cloud-3";
 import { GitHubStarButton } from "@/components/GitHubStarButton";
 import { Spotlight } from "@/components/core/spotlight";
@@ -182,17 +183,7 @@ export default async function Home() {
             <div className="flex-1 lg:flex-[0.55] w-full">
               <div className="flex justify-center lg:justify-end">
                 <div className="relative w-full max-w-[760px] overflow-hidden rounded-[28px]">
-                  <div className="aspect-[1480/1080] w-full">
-                    <video
-                      autoPlay
-                      loop
-                      muted
-                      playsInline
-                      className="absolute top-0 bottom-0 h-full w-[129.7%] -left-[14.86%] max-w-none object-fill"
-                    >
-                      <source src="/opendirectorydev_hero_video.webm" type="video/webm" />
-                    </video>
-                  </div>
+                  <HeroVideo />
                 </div>
               </div>
             </div>

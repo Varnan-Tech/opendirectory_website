@@ -74,7 +74,7 @@ export function FilterableSkills({ initialRepos }: FilterableSkillsProps) {
         
         <div>
           <h4 className="text-[12px] font-semibold text-black/50 uppercase tracking-wider mb-3">Categories</h4>
-          <div className="flex flex-col gap-1.5">
+          <div className="flex flex-row overflow-x-auto sm:flex-col gap-2 sm:gap-1.5 pb-2 sm:pb-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
             {allTags.map(tag => (
               <button
                 key={tag}

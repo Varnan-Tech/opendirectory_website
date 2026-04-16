@@ -417,16 +417,16 @@ export function BentoGrid({ repos }: BentoGridProps) {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               onClick={(e) => e.stopPropagation()}
-              className="relative w-full max-w-3xl max-h-[85vh] bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col"
+              className="relative w-full max-w-3xl max-h-[90vh] sm:max-h-[85vh] bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col"
             >
-              <div className="flex items-center justify-between p-6 border-b border-black/[0.08]">
+              <div className="flex items-center justify-between p-4 sm:p-6 border-b border-black/[0.08]">
                 <div className="flex items-center gap-3">
                   <BrandIcon name={selectedRepo.name} />
                   <a 
                     href={`https://github.com/Varnan-Tech/opendirectory/tree/main/skills/${selectedRepo.name}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-xl font-semibold hover:text-[#856FE6] transition-colors"
+                    className="text-xl font-semibold hover:text-[#856FE6] transition-colors break-all"
                   >
                     {selectedRepo.name}
                   </a>
@@ -439,7 +439,7 @@ export function BentoGrid({ repos }: BentoGridProps) {
                 </button>
               </div>
 
-              <div className="flex-1 overflow-y-auto p-6">
+              <div className="flex-1 overflow-y-auto p-4 sm:p-6">
                 <div className="mb-8 p-4 bg-black/[0.02] border border-black/[0.08] rounded-xl">
                   <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-3 gap-3">
                     <h4 className="text-[13px] font-semibold text-black/70 uppercase tracking-wider">Install Command</h4>
