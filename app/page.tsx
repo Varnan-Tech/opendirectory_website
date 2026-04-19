@@ -1,17 +1,29 @@
 import React from "react";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { AnimatedHero } from "@/components/AnimatedHero";
-import { FilterableSkills } from "@/components/FilterableSkills";
-import { Footer } from "@/components/Footer";
+import { InstallCommand } from "@/components/InstallCommand";
 import { Button } from "@/components/ui/neon-button";
 import { AnimatedLogo } from "@/components/AnimatedLogo";
 import { HeroVideo } from "@/components/HeroVideo";
-import { LogoCloud } from "@/components/ui/logo-cloud-3";
 import { GitHubStarButton } from "@/components/GitHubStarButton";
 import { Spotlight } from "@/components/core/spotlight";
-import { ContributeAnimation } from "@/components/ContributeAnimation";
-import { FAQSection } from "@/components/FAQSection";
 import { GithubCopilot, Codex, Claude, GeminiCLI, Antigravity } from '@lobehub/icons';
+
+const FilterableSkills = dynamic(() => import("@/components/FilterableSkills").then(mod => mod.FilterableSkills), {
+  ssr: true,
+  loading: () => <div className="w-full h-64 bg-black/5 animate-pulse rounded-xl"></div>
+});
+
+const Footer = dynamic(() => import("@/components/Footer").then(mod => mod.Footer), {
+  ssr: true,
+  loading: () => <div className="w-full h-32 bg-black/5 animate-pulse"></div>
+});
+
+const LogoCloud = dynamic(() => import("@/components/ui/logo-cloud-3").then(mod => mod.LogoCloud), {
+  ssr: true,
+  loading: () => <div className="w-full h-16 bg-black/5 animate-pulse rounded-xl"></div>
+});
 
 interface GitHubRepo {
   name: string;
@@ -52,6 +64,58 @@ function formatDistanceToNow(date: Date) {
   return `${Math.floor(diffInSeconds / 2592000)} months`;
 }
 
+async function fetchWithTimeout(url: string, options: any = {}, timeout = 5000) {
+  const maxRetries = 3;
+  
+  const headers = new Headers(options.headers || {});
+  if (process.env.GITHUB_TOKEN) {
+    headers.set('Authorization', `token ${process.env.GITHUB_TOKEN}`);
+  }
+  
+  const fetchOptions = { ...options, headers };
+
+  for (let i = 0; i <= maxRetries; i++) {
+    const controller = new AbortController();
+    const id = setTimeout(() => controller.abort(), timeout);
+    
+    try {
+      const response = await fetch(url, {
+        ...fetchOptions,
+        signal: controller.signal,
+      });
+      clearTimeout(id);
+      
+      if ((response.status === 403 || response.status === 429) && i < maxRetries) {
+        throw new Error(`Rate limited: ${response.status}`);
+      }
+      
+      return response;
+    } catch (error) {
+      clearTimeout(id);
+      if (i === maxRetries) {
+        throw error;
+      }
+      const delay = 1000 * Math.pow(2, i);
+      await new Promise(resolve => setTimeout(resolve, delay));
+    }
+  }
+  throw new Error("Fetch failed after retries");
+}
+
+async function chunkedPromiseAll<T, R>(
+  items: T[],
+  fn: (item: T) => Promise<R>,
+  chunkSize: number
+): Promise<R[]> {
+  const results: R[] = [];
+  for (let i = 0; i < items.length; i += chunkSize) {
+    const chunk = items.slice(i, i + chunkSize);
+    const chunkResults = await Promise.all(chunk.map(fn));
+    results.push(...chunkResults);
+  }
+  return results;
+}
+
 async function getGitHubStats(): Promise<GitHubRepo[]> {
   try {
     // We now fetch the contents of the "skills" folder from the opendirectory repo
@@ -65,7 +129,7 @@ async function getGitHubStats(): Promise<GitHubRepo[]> {
     
     // We need to fetch details for each skill (from package.json and GitHub repo stats if exists)
     // Since skills are folders, we can use their names and fetch package.json to get description
-    const processedRepos = await Promise.all(skillsFolders.map(async (folder: any) => {
+    const processedRepos = await chunkedPromiseAll(skillsFolders, async (folder: any) => {
       if (folder.type !== "dir") return null;
       
       const skillName = folder.name;
@@ -78,22 +142,30 @@ async function getGitHubStats(): Promise<GitHubRepo[]> {
       
       try {
         // Try to fetch package.json for description
-        const pkgRes = await fetch(`https://raw.githubusercontent.com/Varnan-Tech/opendirectory/main/skills/${skillName}/package.json`, {
+        const pkgRes = await fetchWithTimeout(`https://raw.githubusercontent.com/Varnan-Tech/opendirectory/main/skills/${skillName}/package.json`, {
           next: { revalidate: 3600 }
         });
         
+        let pkgData = null;
         if (pkgRes.ok) {
-          const pkg = await pkgRes.json();
-          if (pkg.description) description = pkg.description;
-          if (pkg.keywords) topics = pkg.keywords;
+          try {
+            pkgData = await pkgRes.json();
+          } catch (e) {
+            console.error(`Error parsing package.json for ${skillName}:`, e);
+          }
+        }
+
+        if (pkgData) {
+          if (pkgData.description) description = pkgData.description;
+          if (pkgData.keywords) topics = pkgData.keywords;
         } else {
            // Fallback to README
-           const readmeRes = await fetch(`https://raw.githubusercontent.com/Varnan-Tech/opendirectory/main/skills/${skillName}/README.md`, {
+           const readmeRes = await fetchWithTimeout(`https://raw.githubusercontent.com/Varnan-Tech/opendirectory/main/skills/${skillName}/README.md`, {
              next: { revalidate: 3600 }
            });
            if (readmeRes.ok) {
              const readmeText = await readmeRes.text();
-             const lines = readmeText.split('\\n');
+             const lines = readmeText.split('\n');
              for (const line of lines) {
                const trimmed = line.trim();
                if (trimmed && !trimmed.startsWith('#') && !trimmed.startsWith('<') && !trimmed.startsWith('![')) {
@@ -103,8 +175,8 @@ async function getGitHubStats(): Promise<GitHubRepo[]> {
              }
            }
         }
-      } catch (e) {
-        console.error(`Error fetching details for ${skillName}:`, e);
+      } catch (e: any) {
+        console.error(`Error fetching details for ${skillName}: ${e.message || "Request failed"}`);
       }
 
       return {
@@ -117,7 +189,7 @@ async function getGitHubStats(): Promise<GitHubRepo[]> {
         updatedAt: "recently", // Simplified for directory-based skills
         topics
       };
-    }));
+    }, 5);
 
     return processedRepos.filter(Boolean) as GitHubRepo[];
   } catch (error) {
@@ -132,6 +204,14 @@ export default async function Home() {
   
   return (
     <main className="flex min-h-screen flex-col items-center bg-white text-black overflow-x-hidden selection:bg-black selection:text-white">
+      <div className="w-full bg-[#856FE6] py-2.5 px-4 text-center z-50 relative">
+        <Link 
+          href="https://github.com/Varnan-Tech/opendirectory/blob/main/CONTRIBUTING.md" 
+          className="text-white text-xs md:text-sm font-medium hover:scale-[1.02] active:scale-95 transition-transform flex items-center justify-center gap-1"
+        >
+          Contribute to our repository and get a chance to <strong className="font-bold underline decoration-[#856FE6] decoration-2 underline-offset-2">win our merch!</strong> →
+        </Link>
+      </div>
       <div className="bg-noise" />
       <div className="fixed inset-0 bg-grid pointer-events-none z-0" />
       
@@ -139,6 +219,11 @@ export default async function Home() {
         <div className="flex items-center gap-3">
           <AnimatedLogo />
         </div>
+
+        <div className="absolute left-1/2 -translate-x-1/2">
+          <Link href="/docs" className="text-sm font-medium hover:text-[#856FE6] transition-colors">Docs</Link>
+        </div>
+
         <div className="flex items-center gap-4">
           <GitHubStarButton repos={repoNames} />
         </div>
@@ -147,7 +232,7 @@ export default async function Home() {
       <section className="relative w-full z-10 overflow-hidden">
         <div className="absolute inset-0 bg-hero-net pointer-events-none z-0" />
 
-        <div className="w-full max-w-[1300px] mx-auto px-6 pt-20 pb-24 relative z-20">
+        <div className="w-full max-w-[1300px] mx-auto px-6 py-4 relative z-20">
           <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
             <div className="flex-1 lg:flex-[0.45] flex flex-col items-start gap-6 min-w-0">
               <AnimatedHero />
@@ -155,34 +240,12 @@ export default async function Home() {
               <p className="text-base md:text-lg text-black/60 max-w-lg leading-relaxed text-balance font-normal">
                 The unified home for open-source agent skills and automation pipelines designed for autonomous agents.
               </p>
-
-              <div className="flex flex-col sm:flex-row items-start gap-3 pt-1">
-                <div className="relative overflow-hidden rounded-full p-[1px] w-full sm:w-auto bg-black/10 group">
-                  <Spotlight
-                    className="from-[#856FE6]/80 via-[#856FE6]/40 to-transparent blur-md"
-                    size={100}
-                  />
-                  <div className="relative h-full w-full rounded-full bg-white">
-                    <a href="#skills" className="block w-full">
-                      <Button variant="solid" size="lg" className="w-full font-medium tracking-tight bg-[#856FE6] text-white hover:bg-[#856FE6]/90 border-0 relative [box-shadow:inset_0_0_0_0.5px_rgba(134,143,151,0.2),inset_1px_1px_0_-0.5px_rgba(134,143,151,0.4),inset_-1px_-1px_0_-0.5px_rgba(134,143,151,0.4)] after:absolute after:inset-0 after:rounded-full after:opacity-0 after:transition-opacity after:duration-200 after:bg-[radial-gradient(61.35%_50.07%_at_48.58%_50%,rgb(0,0,0)_0%,rgb(24,24,24)_100%)] after:[box-shadow:inset_0_0_0_0.5px_hsl(var(--border)),inset_1px_1px_0_-0.5px_hsl(var(--border)),inset_-1px_-1px_0_-0.5px_hsl(var(--border)),0_0_3px_rgba(255,255,255,0.1)] hover:after:opacity-100">
-                        <span className="flex items-center justify-center gap-1.5 relative z-10">
-                          Explore Directory
-                        </span>
-                      </Button>
-                    </a>
-                  </div>
-                </div>
-                <Link href="/docs" className="w-full sm:w-auto">
-                  <Button variant="ghost" size="lg" neon={true} className="w-full sm:w-auto font-medium tracking-tight border border-black/10 text-black hover:bg-black/5 bg-transparent relative [box-shadow:inset_0_0_0_0.5px_hsl(var(--border)),inset_1px_1px_0_-0.5px_hsl(var(--border)),inset_-1px_-1px_0_-0.5px_hsl(var(--border))] after:absolute after:inset-0 after:rounded-full after:opacity-0 after:transition-opacity after:duration-200 after:bg-[radial-gradient(61.35%_50.07%_at_48.58%_50%,rgb(255,255,255)_0%,rgb(242,242,242)_100%)] after:[box-shadow:inset_0_0_0_0.5px_hsl(var(--border)),inset_1px_1px_0_-0.5px_hsl(var(--border)),inset_-1px_-1px_0_-0.5px_hsl(var(--border)),0_0_3px_hsl(var(--ring))] hover:after:opacity-100">
-                    <span className="relative z-10">Documentation</span>
-                  </Button>
-                </Link>
-              </div>
+              <InstallCommand />
             </div>
 
             <div className="flex-1 lg:flex-[0.55] w-full">
               <div className="flex justify-center lg:justify-end">
-                <div className="relative w-full max-w-[760px] overflow-hidden rounded-[28px]">
+                <div className="relative w-full max-w-[450px] overflow-hidden rounded-[28px]">
                   <HeroVideo />
                 </div>
               </div>
@@ -214,35 +277,6 @@ export default async function Home() {
           <FilterableSkills initialRepos={repos as GitHubRepo[]} />
         </div>
       </section>
-
-      <section className="w-full max-w-[1200px] mx-auto px-6 py-24 z-10 relative border-t border-black/[0.05] bg-white">
-        <div className="flex flex-col items-center justify-center text-center gap-8">
-          <ContributeAnimation />
-          
-          <h2 className="text-3xl md:text-4xl font-medium tracking-tighter text-black">
-            Contribute to Open Directory
-          </h2>
-          
-          <p className="text-black/60 text-lg max-w-2xl leading-relaxed">
-            Have you built an innovative skill or pipeline? Join our open-source ecosystem and share it with the world. We welcome contributions that help autonomous agents do more.
-          </p>
-          
-          <div className="flex gap-4 mt-4">
-            <a href="https://github.com/Varnan-Tech/opendirectory/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener noreferrer">
-              <Button variant="solid" size="lg" className="font-medium tracking-tight bg-black text-white hover:bg-black/80">
-                View Guidelines
-              </Button>
-            </a>
-            <a href="https://github.com/Varnan-Tech/opendirectory" target="_blank" rel="noopener noreferrer">
-              <Button variant="ghost" size="lg" neon={true} className="font-medium tracking-tight border border-black/10 text-black hover:bg-black/5 bg-transparent">
-                Go to GitHub
-              </Button>
-            </a>
-          </div>
-        </div>
-      </section>
-
-      <FAQSection />
 
       <Footer />
     </main>

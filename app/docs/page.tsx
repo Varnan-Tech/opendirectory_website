@@ -2,6 +2,8 @@ import React from "react";
 import { Footer } from "@/components/Footer";
 import { AnimatedLogo } from "@/components/AnimatedLogo";
 import { DocsAnimation } from "@/components/DocsAnimation";
+import { ContributeAnimation } from "@/components/ContributeAnimation";
+import { Button } from "@/components/ui/neon-button";
 import Link from "next/link";
 
 export default function DocsPage() {
@@ -210,34 +212,27 @@ export default function DocsPage() {
               <li><strong>Context Priming:</strong> The skill is now "memorized" by your AI. The next time you open your agent, it automatically knows the exact steps, prompts, and APIs needed to execute the skill flawlessly.</li>
             </ol>
 
-            <div className="bg-[#856FE6]/5 border border-[#856FE6]/20 rounded-xl p-8 mt-12 mb-8">
-              <h3 className="text-lg font-semibold tracking-tight mb-4 text-black">Frequently Asked Questions</h3>
+            <h2 className="text-2xl font-semibold tracking-tight mt-16 mb-6 border-b border-black/10 pb-4">
+              Contribute to Open Directory
+            </h2>
+            <div className="flex flex-col items-center justify-center text-center gap-8 py-8">
+              <ContributeAnimation />
               
-              <div className="space-y-6">
-                <div>
-                  <h4 className="font-medium text-black">Do I need to be a developer to use these?</h4>
-                  <p className="text-sm text-black/70 mt-1">No! While the tools are used inside a terminal, the installation only requires copying and pasting one single line. The AI agent itself handles all the complex "developer" work for you.</p>
-                </div>
-                
-                <div>
-                  <h4 className="font-medium text-black">Are these skills free?</h4>
-                  <p className="text-sm text-black/70 mt-1">Yes, all skills hosted on Open Directory are open-source and free to use under the MIT License.</p>
-                </div>
-                
-                <div>
-                  <h4 className="font-medium text-black">What if my AI needs a password or API key?</h4>
-                  <p className="text-sm text-black/70 mt-1">Some advanced skills (like a Reddit scraper) might require an API key. When your AI agent attempts to use the skill, it will naturally pause and ask you: <em>"Please provide your API key to continue."</em> Simply paste it into the chat, and the AI will handle the rest securely.</p>
-                </div>
-
-                <div>
-                  <h4 className="font-medium text-black">Can I contribute my own skills?</h4>
-                  <p className="text-sm text-black/70 mt-1">Absolutely! Open Directory is a community-driven project. You can submit your own skills by opening a Pull Request on our GitHub repository. Check out our Contribution Guidelines for more details.</p>
-                </div>
-
-                <div>
-                  <h4 className="font-medium text-black">Which AI agents are supported?</h4>
-                  <p className="text-sm text-black/70 mt-1">Currently, we support Claude Code natively via the marketplace plugin, as well as OpenCode, Codex, Gemini CLI, and Anti-Gravity via the standard npx installation method.</p>
-                </div>
+              <p className="text-black/60 text-lg max-w-2xl leading-relaxed">
+                Have you built an innovative skill or pipeline? Join our open-source ecosystem and share it with the world. We welcome contributions that help autonomous agents do more.
+              </p>
+              
+              <div className="flex gap-4 mt-4">
+                <a href="https://github.com/Varnan-Tech/opendirectory/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener noreferrer">
+                  <Button variant="solid" size="lg" className="font-medium tracking-tight bg-black text-white hover:bg-black/80">
+                    View Guidelines
+                  </Button>
+                </a>
+                <a href="https://github.com/Varnan-Tech/opendirectory" target="_blank" rel="noopener noreferrer">
+                  <Button variant="ghost" size="lg" neon={true} className="font-medium tracking-tight border border-black/10 text-black hover:bg-black/5 bg-transparent">
+                    Go to GitHub
+                  </Button>
+                </a>
               </div>
             </div>
 

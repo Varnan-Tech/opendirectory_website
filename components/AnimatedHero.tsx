@@ -1,30 +1,52 @@
 "use client";
 
-import React from "react";
-import { Typewriter } from "@/components/ui/typewriter";
-
-const WORDS = ["WORKFLOW.", "AGENT.", "PIPELINE.", "SYSTEM."];
+import React from 'react';
+import { motion } from 'framer-motion';
 
 export function AnimatedHero() {
+  const text1 = "THE EXECUTION LAYER";
+  const text2 = "FOR YOUR SYSTEM.";
+  
+  const container = {
+    hidden: { opacity: 1 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.03,
+      },
+    },
+  };
+
+  const letter = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+    },
+  };
+
   return (
-    <div
-      className="w-full flex flex-col items-start text-left text-5xl sm:text-6xl md:text-[72px] lg:text-[80px] leading-[0.92] text-black font-display font-normal"
-      style={{ letterSpacing: "-0.04em" }}
-    >
-      <span>THE EXECUTION LAYER</span>
-      <div className="relative h-[1.1em] flex items-center gap-[0.2em]">
-        <span className="text-black/50">FOR YOUR</span>
-        <Typewriter 
-          text={WORDS}
-          speed={70}
-          waitTime={2000}
-          deleteSpeed={40}
-          loop={true}
-          cursorClassName="text-[#856FE6]"
-          className="text-[#856FE6]"
-        />
-        <span className="opacity-0 pointer-events-none select-none absolute">WORKFLOW.</span>
-      </div>
+    <div className="relative w-full flex flex-col items-start text-left">
+      <motion.h1 
+        variants={container}
+        initial="hidden"
+        animate="visible"
+        className="font-display font-bold text-5xl md:text-6xl tracking-tighter uppercase text-[#1e293b] leading-[0.92]"
+      >
+        <div className="block">
+          {text1.split("").map((char, index) => (
+            <motion.span key={`t1-${index}`} variants={letter}>
+              {char}
+            </motion.span>
+          ))}
+        </div>
+        <div className="block">
+          {text2.split("").map((char, index) => (
+            <motion.span key={`t2-${index}`} variants={letter}>
+              {char}
+            </motion.span>
+          ))}
+        </div>
+      </motion.h1>
     </div>
   );
 }

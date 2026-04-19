@@ -1,8 +1,14 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
-import { BentoGrid, GitHubRepo } from "./BentoGrid";
+import dynamic from "next/dynamic";
+import type { GitHubRepo } from "./BentoGrid";
 import { Search } from "lucide-react";
+
+const BentoGrid = dynamic(() => import("./BentoGrid").then(mod => mod.BentoGrid), {
+  ssr: true,
+  loading: () => <div className="w-full h-64 bg-black/5 animate-pulse rounded-xl"></div>
+});
 
 interface FilterableSkillsProps {
   initialRepos: GitHubRepo[];
@@ -19,6 +25,17 @@ function getTagsForRepo(repo: GitHubRepo): string[] {
   if (content.includes("agent") || content.includes("ai") || content.includes("bot")) tags.push("Agent");
   if (content.includes("api") || content.includes("endpoint")) tags.push("API");
   if (content.includes("cli") || content.includes("terminal")) tags.push("CLI");
+  
+  if (content.includes("react") || content.includes("nextjs") || content.includes("next.js")) tags.push("React");
+  if (content.includes("python") || content.includes("django") || content.includes("flask")) tags.push("Python");
+  if (content.includes("design") || content.includes("ui") || content.includes("ux") || content.includes("css") || content.includes("tailwind")) tags.push("Design");
+  if (content.includes("test") || content.includes("jest") || content.includes("cypress") || content.includes("playwright")) tags.push("Testing");
+  if (content.includes("security") || content.includes("auth") || content.includes("crypto")) tags.push("Security");
+  if (content.includes("github") || content.includes("git") || content.includes("pr") || content.includes("commit")) tags.push("GitHub");
+  if (content.includes("vercel") || content.includes("deploy")) tags.push("Vercel");
+  if (content.includes("discord") || content.includes("slack")) tags.push("Discord");
+  if (content.includes("social") || content.includes("twitter") || content.includes("linkedin") || content.includes("reddit")) tags.push("Social");
+  if (content.includes("database") || content.includes("sql") || content.includes("mongo") || content.includes("postgres") || content.includes("supabase")) tags.push("Database");
 
   if (tags.length === 0) tags.push("Skill");
   
@@ -107,7 +124,7 @@ export function FilterableSkills({ initialRepos }: FilterableSkillsProps) {
           </div>
         </div>
         <div className="relative">
-          <div className="max-h-[520px] overflow-y-auto pr-2 pb-8 [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-black/10 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-black/20">
+          <div className="max-h-[850px] overflow-y-auto pr-2 pb-8 [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-black/10 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-black/20">
             <BentoGrid repos={filteredRepos} />
           </div>
           <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-[#FAFAFA] to-transparent z-10" />

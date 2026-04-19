@@ -4,11 +4,16 @@ import React, { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
-import ReactMarkdown from "react-markdown";
+import dynamic from "next/dynamic";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
 import rehypeHighlight from "rehype-highlight";
 import "highlight.js/styles/github-dark.css";
+
+const ReactMarkdown = dynamic(() => import("react-markdown"), {
+  ssr: true,
+  loading: () => <div className="w-full h-32 bg-black/5 animate-pulse rounded-xl"></div>
+});
 import { 
   Code2, 
   Globe, 
@@ -44,11 +49,7 @@ function BrandIcon({ name }: { name: string }) {
   const lowerName = name.toLowerCase();
   
   if (lowerName.includes("google") || lowerName.includes("trends")) {
-    return (
-      <svg viewBox="0 0 24 24" className="w-5 h-5" fill="currentColor">
-        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-1 .67-2.26 1.07-3.71 1.07-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.11c-.22-.67-.35-1.39-.35-2.11s.13-1.44.35-2.11V7.05H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.95l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.05l3.66 2.84c.87-2.6 3.3-4.51 6.16-4.51z" fill="#EA4335"/>
-      </svg>
-    );
+    return <img src="/vectors/google-icon.svg" alt="Google" className="w-5 h-5" />;
   }
   
   if (lowerName.includes("yc") || lowerName.includes("ycombinator")) {
@@ -60,44 +61,23 @@ function BrandIcon({ name }: { name: string }) {
   }
   
   if (lowerName.includes("twitter") || lowerName.includes("x-")) {
-    return (
-      <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="currentColor" viewBox="0 0 1200 1227">
-        <path d="M714.163 519.284 1160.89 0h-105.86L667.137 450.887 357.328 0H0l468.492 681.821L0 1226.37h105.866l409.625-476.152 327.181 476.152H1200L714.137 519.284h.026ZM569.165 687.828l-47.468-67.894-377.686-540.24h162.604l304.797 435.991 47.468 67.894 396.2 566.721H892.476L569.165 687.854v-.026Z"/>
-      </svg>
-    );
+    return <img src="/vectors/twitter-icon.svg" alt="Twitter" className="w-5 h-5" />;
   }
 
   if (lowerName.includes("github") || lowerName.includes("code")) {
-    return (
-      <svg viewBox="0 0 24 24" className="w-5 h-5" fill="currentColor">
-        <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12Z" />
-      </svg>
-    );
+    return <img src="/vectors/github-icon.svg" alt="GitHub" className="w-5 h-5" />;
   }
   
   if (lowerName.includes("producthunt") || lowerName.includes("product-hunt")) {
-    return (
-      <svg viewBox="0 0 40 40" className="w-5 h-5">
-        <path fill="#da552f" d="M40 20c0 11.045-8.955 20-20 20S0 31.045 0 20 8.955 0 20 0s20 8.955 20 20z"></path>
-        <path fill="#fff" d="M22.667 20H17v-6h5.667c1.73 0 3.133 1.403 3.133 3.133 0 1.73-1.403 3.134-3.133 3.134m0-9.333H13.667v18.666H17v-6h5.667c3.57 0 6.466-2.897 6.466-6.467 0-3.57-2.896-6.466-6.466-6.466"></path>
-      </svg>
-    );
+    return <img src="/vectors/producthunt-icon.svg" alt="ProductHunt" className="w-5 h-5" />;
   }
 
   if (lowerName.includes("meta") || lowerName.includes("facebook") || lowerName.includes("ads")) {
-    return (
-      <svg viewBox="0 0 24 24" className="w-5 h-5">
-        <path fill="#0668E1" d="M6.915 4.03c-1.968 0-3.683 1.28-4.871 3.113C.704 9.208 0 11.883 0 14.449c0 .706.07 1.369.21 1.973a7 7 0 0 0 .265.86a5.3 5.3 0 0 0 .371.761c.696 1.159 1.818 1.927 3.593 1.927c1.497 0 2.633-.671 3.965-2.444c.76-1.012 1.144-1.626 2.663-4.32l.756-1.339l.186-.325c.061.1.121.196.183.3l2.152 3.595c.724 1.21 1.665 2.556 2.47 3.314c1.046.987 1.992 1.22 3.06 1.22c1.075 0 1.876-.355 2.455-.843a3.7 3.7 0 0 0 .81-.973c.542-.939.861-2.127.861-3.745c0-2.72-.681-5.357-2.084-7.45c-1.282-1.912-2.957-2.93-4.716-2.93c-1.047 0-2.088.467-3.053 1.308c-.652.57-1.257 1.29-1.82 2.05c-.69-.875-1.335-1.547-1.958-2.056c-1.182-.966-2.315-1.303-3.454-1.303zm10.16 2.053c1.147 0 2.188.758 2.992 1.999c1.132 1.748 1.647 4.195 1.647 6.4c0 1.548-.368 2.9-1.839 2.9c-.58 0-1.027-.23-1.664-1.004c-.496-.601-1.343-1.878-2.832-4.358l-.617-1.028a45 45 0 0 0-1.255-1.98c.07-.109.141-.224.211-.327c1.12-1.667 2.118-2.602 3.358-2.602zm-10.201.553c1.265 0 2.058.791 2.675 1.446c.307.327.737.871 1.234 1.579l-1.02 1.566c-.757 1.163-1.882 3.017-2.837 4.338c-1.191 1.649-1.81 1.817-2.486 1.817c-.524 0-1.038-.237-1.383-.794c-.263-.426-.464-1.13-.464-2.046c0-2.221.63-4.535 1.66-6.088c.454-.687.964-1.226 1.533-1.533a2.26 2.26 0 0 1 1.088-.285"/>
-      </svg>
-    );
+    return <img src="/vectors/meta-icon.svg" alt="Meta" className="w-5 h-5" />;
   }
 
   if (lowerName.includes("reddit")) {
-    return (
-      <svg viewBox="0 0 24 24" className="w-5 h-5">
-        <path fill="#FF4500" d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.562-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.688-.561-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/>
-      </svg>
-    );
+    return <img src="/vectors/reddit-icon.svg" alt="Reddit" className="w-5 h-5" />;
   }
 
   if (lowerName.includes("amazon")) {
@@ -236,7 +216,7 @@ function InstallButton({ name }: { name: string }) {
                     value={selectedPlatform}
                     onChange={handleSelectChange}
                     className="flex-1 bg-white border border-black/10 rounded-lg px-4 py-3 text-[14px] font-medium text-black focus:outline-none focus:ring-2 focus:ring-[#856FE6]/30 hover:border-black/20 transition-colors cursor-pointer appearance-none"
-                    style={{ backgroundImage: `url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23000000%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 1rem top 50%', backgroundSize: '0.65rem auto' }}
+                    style={{ backgroundImage: `url("/vectors/chevron-down.svg")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 1rem top 50%', backgroundSize: '0.65rem auto' }}
                   >
                     {platforms.map(p => (
                       <option key={p.id} value={p.flag}>{p.name}</option>
@@ -265,17 +245,13 @@ function InstallButton({ name }: { name: string }) {
 
 function StarIcon() {
   return (
-    <svg aria-hidden="true" height="14" viewBox="0 0 16 16" version="1.1" width="14" fill="currentColor" className="text-black/40 group-hover:text-[#856FE6] transition-colors">
-      <path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.312a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.311L7.327.668A.75.75 0 0 1 8 .25Zm0 2.445L6.615 5.5a.75.75 0 0 1-.564.41l-3.097.23 2.24 2.184a.75.75 0 0 1 .216.664l-.528 3.084 2.769-1.456a.75.75 0 0 1 .698 0l2.77 1.456-.53-3.084a.75.75 0 0 1 .216-.664l2.24-2.183-3.096-.23a.75.75 0 0 1-.564-.41L8 2.694Z"></path>
-    </svg>
+    <img src="/vectors/star-icon.svg" alt="Star" className="w-3.5 h-3.5 opacity-40 group-hover:opacity-100 group-hover:invert-[.4] group-hover:sepia-[.8] group-hover:saturate-[4] group-hover:hue-rotate-[220deg] transition-all" />
   );
 }
 
 function ForkIcon() {
   return (
-    <svg aria-hidden="true" height="14" viewBox="0 0 16 16" version="1.1" width="14" fill="currentColor" className="text-black/40 group-hover:text-[#856FE6] transition-colors">
-      <path d="M5 5.372v.878c0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75v-.878a2.25 2.25 0 1 1 1.5 0v.878a2.25 2.25 0 0 1-2.25 2.25h-1.5v2.128a2.251 2.251 0 1 1-1.5 0V8.5h-1.5A2.25 2.25 0 0 1 3.5 6.25v-.878a2.25 2.25 0 1 1 1.5 0ZM5 3.25a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Zm6.75.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm-3 8.75a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Z"></path>
-    </svg>
+    <img src="/vectors/fork-icon.svg" alt="Fork" className="w-3.5 h-3.5 opacity-40 group-hover:opacity-100 group-hover:invert-[.4] group-hover:sepia-[.8] group-hover:saturate-[4] group-hover:hue-rotate-[220deg] transition-all" />
   );
 }
 
@@ -498,7 +474,22 @@ export function BentoGrid({ repos }: BentoGridProps) {
                             }
                             return <img src={finalSrc} alt={alt || ""} className="max-w-full rounded-lg my-4" {...props} />;
                           },
-                          video: ({ ...props }) => <video {...props} className="max-w-full rounded-lg" controls />
+                          video: ({ node, src, ...props }: any) => {
+                            let finalSrc = src;
+                            if (src && !src.startsWith("http") && !src.startsWith("data:")) {
+                              const cleanSrc = src.startsWith("/") ? src.slice(1) : src;
+                              finalSrc = `https://raw.githubusercontent.com/Varnan-Tech/opendirectory/main/skills/${selectedRepo.name}/${cleanSrc}`;
+                            }
+                            return <video src={finalSrc} {...props} className="max-w-full rounded-lg" controls />;
+                          },
+                          source: ({ node, src, ...props }: any) => {
+                            let finalSrc = src;
+                            if (src && !src.startsWith("http") && !src.startsWith("data:")) {
+                              const cleanSrc = src.startsWith("/") ? src.slice(1) : src;
+                              finalSrc = `https://raw.githubusercontent.com/Varnan-Tech/opendirectory/main/skills/${selectedRepo.name}/${cleanSrc}`;
+                            }
+                            return <source src={finalSrc} {...props} />;
+                          }
                         }}
                       >
                         {readme}
