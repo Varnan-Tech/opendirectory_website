@@ -1,5 +1,6 @@
 import { auth, signIn } from '@/auth';
 import ClaimForm from './ClaimForm';
+import { AnimatedLogo } from '@/components/AnimatedLogo';
 
 export default async function ClaimPage() {
   const session = await auth();
@@ -7,8 +8,10 @@ export default async function ClaimPage() {
   if (!session?.user?.name) {
     return (
       <div className="min-h-screen bg-background text-foreground flex flex-col items-center justify-center p-4 py-12">
-        <div className="w-full max-w-2xl bg-card border border-border rounded-2xl p-8 shadow-xl text-center">
-          <h1 className="text-3xl font-bold tracking-tight mb-2 text-primary">Open Directory</h1>
+        <div className="w-full max-w-2xl bg-card border border-border rounded-2xl p-8 shadow-xl text-center flex flex-col items-center">
+          <div className="mb-6">
+            <AnimatedLogo />
+          </div>
           <h2 className="text-xl font-bold tracking-tight mb-4">Claim Your Merch</h2>
           <p className="text-muted-foreground mb-8">Sign in with GitHub to verify your eligibility.</p>
           <form

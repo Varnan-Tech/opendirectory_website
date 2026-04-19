@@ -2,10 +2,12 @@
 
 import { useState } from 'react';
 import { submitClaim } from '@/actions/claim';
+import { signOut } from 'next-auth/react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
+import { AnimatedLogo } from '@/components/AnimatedLogo';
 import {
   Dialog,
   DialogContent,
@@ -65,8 +67,10 @@ export default function ClaimForm({ githubEmail }: { githubEmail: string }) {
 
   return (
     <div className="w-full max-w-2xl bg-card border border-border rounded-2xl p-8 shadow-xl">
-      <div className="mb-8 text-center">
-        <h1 className="text-3xl font-bold tracking-tight mb-2 text-primary">Open Directory</h1>
+      <div className="mb-8 text-center flex flex-col items-center">
+        <div className="mb-4">
+          <AnimatedLogo />
+        </div>
         <h2 className="text-xl font-semibold tracking-tight mb-2">Claim Your Merch</h2>
         <p className="text-muted-foreground text-sm">
           {step === 1 && "Provide your shipping details."}
@@ -236,6 +240,15 @@ export default function ClaimForm({ githubEmail }: { githubEmail: string }) {
           </p>
         </div>
       )}
+      
+      <div className="mt-8 text-center">
+        <button 
+          onClick={() => signOut({ callbackUrl: '/' })} 
+          className="text-sm text-muted-foreground hover:text-foreground underline transition-colors"
+        >
+          Sign out
+        </button>
+      </div>
     </div>
   );
 }
