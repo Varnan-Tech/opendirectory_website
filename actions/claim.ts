@@ -34,7 +34,7 @@ export async function submitClaim(data: any) {
 
     const parsedData = claimSchema.safeParse(data);
     if (!parsedData.success) {
-      return { error: parsedData.error.errors[0].message };
+      return { error: parsedData.error.issues?.[0]?.message || "Invalid form data provided." };
     }
     const validData = parsedData.data;
 
