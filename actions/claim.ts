@@ -77,17 +77,35 @@ export async function submitClaim(data: any) {
       await resend.emails.send({
         from: 'Open Directory <noreply@opendirectory.dev>',
         to: validData.contactEmail,
-        subject: 'Merch Claim Acknowledgment - Open Directory',
+        subject: 'Merch Claim Acknowledgment - Open Directory 🎉',
         html: `
-          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-            <h2>Thank You for Your Contribution!</h2>
-            <p>Hi ${validData.firstName},</p>
-            <p>We have successfully received your merch claim. Thank you for your amazing contributions to Open Directory!</p>
-            <p>In <strong>4 to 5 business days</strong>, we will send you an update and a tracking number for your t-shirt and merch.</p>
-            <p>Keep building awesome things!</p>
-            <br/>
-            <p>Best regards,</p>
-            <p><strong>The Open Directory Team</strong></p>
+          <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; background-color: #ffffff; border: 1px solid #e5e7eb; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);">
+            <img src="https://www.opendirectory.dev/opendirectory_banner.webp" alt="Open Directory Banner" style="width: 100%; height: auto; display: block; border-bottom: 1px solid #e5e7eb;" />
+            <div style="padding: 32px;">
+              <h2 style="color: #111827; margin-top: 0; font-size: 24px;">Merch Claim Confirmed! 🎉</h2>
+              <p style="color: #374151; font-size: 16px; line-height: 1.6;">Hi <strong>${validData.firstName}</strong>,</p>
+              <p style="color: #374151; font-size: 16px; line-height: 1.6;">Thank you for your amazing contributions to Open Directory. We have successfully received your shipping details for your well-deserved merch.</p>
+              
+              <div style="background-color: #f3f4f6; padding: 20px; border-radius: 8px; margin: 28px 0; border: 1px solid #e5e7eb;">
+                <h3 style="margin-top: 0; margin-bottom: 12px; color: #111827; font-size: 16px;">Order Summary</h3>
+                <p style="margin: 0; color: #4b5563; font-size: 15px; line-height: 1.5;"><strong>Shipping to:</strong><br/>
+                ${validData.firstName} ${validData.lastName}<br/>
+                ${validData.city}, ${validData.state}, ${validData.country}<br/>
+                ${validData.pinCode}</p>
+                <p style="margin: 16px 0 0 0; color: #4b5563; font-size: 15px;"><strong>Shirt Size:</strong> ${validData.shirtSize}</p>
+              </div>
+
+              <p style="color: #374151; font-size: 16px; line-height: 1.6;">In <strong>4 to 5 business days</strong>, we will send you an update and a tracking number for your t-shirt and merch package.</p>
+              <p style="color: #374151; font-size: 16px; line-height: 1.6;">Keep building awesome things!</p>
+              
+              <br/>
+              <p style="color: #374151; font-size: 16px; line-height: 1.6; margin-bottom: 4px;">Best regards,</p>
+              <p style="color: #111827; font-size: 16px; font-weight: bold; margin-top: 0;">The Open Directory Team</p>
+            </div>
+            <div style="background-color: #f9fafb; padding: 20px; text-align: center; border-top: 1px solid #e5e7eb;">
+              <p style="color: #6b7280; font-size: 13px; margin: 0;">© 2026 Open Directory. All rights reserved.<br/>
+              <a href="https://www.opendirectory.dev" style="color: #2563eb; text-decoration: none;">www.opendirectory.dev</a></p>
+            </div>
           </div>
         `,
       });
