@@ -5,17 +5,10 @@ export const claimStatusEnum = pgEnum('claim_status', ['pending', 'shipped', 'de
 
 export const mergedContributors = pgTable('merged_contributors', {
   id: uuid('id').primaryKey().defaultRandom(),
-  githubUsername: varchar('github_username', { length: 255 }).notNull(),
-  email: varchar('email', { length: 255 }).unique().notNull(),
+  githubUsername: varchar('github_username', { length: 255 }).unique().notNull(),
+  email: varchar('email', { length: 255 }).notNull(),
   hasClaimed: boolean('has_claimed').default(false).notNull(),
   mergedAt: timestamp('merged_at').defaultNow().notNull(),
-});
-
-export const otpTokens = pgTable('otp_tokens', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  email: varchar('email', { length: 255 }).notNull(),
-  token: varchar('token', { length: 255 }).notNull(),
-  expiresAt: timestamp('expires_at').notNull(),
 });
 
 export const merchClaims = pgTable('merch_claims', {
@@ -32,6 +25,7 @@ export const merchClaims = pgTable('merch_claims', {
   city: varchar('city', { length: 255 }).notNull(),
   state: varchar('state', { length: 255 }).notNull(),
   pinCode: varchar('pin_code', { length: 50 }).notNull(),
+  country: varchar("country", { length: 100 }).notNull(),
   shirtSize: shirtSizeEnum('shirt_size').notNull(),
   status: claimStatusEnum('status').default('pending').notNull(),
 });

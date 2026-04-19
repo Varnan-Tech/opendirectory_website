@@ -40,7 +40,7 @@ export async function POST(req: NextRequest) {
         await db.insert(mergedContributors).values({
           githubUsername: username,
           email: email,
-        }).onConflictDoNothing({ target: mergedContributors.email });
+        }).onConflictDoNothing({ target: mergedContributors.githubUsername });
       }
     }
 
