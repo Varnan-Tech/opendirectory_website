@@ -466,6 +466,28 @@ export function BentoGrid({ repos }: BentoGridProps) {
                         remarkPlugins={[remarkGfm]} 
                         rehypePlugins={[rehypeRaw, rehypeHighlight]}
                         components={{
+                          a: ({ node, href, children, ...props }: any) => {
+                            const isGithubAsset = href && href.startsWith("https://github.com/user-attachments/assets/");
+                            const isTextMatch = children && children.length === 1 && typeof children[0] === 'string' && children[0] === href;
+                            
+                            if (isGithubAsset && isTextMatch) {
+                              return (
+                                <video 
+                                  src={href} 
+                                  controls 
+                                  className="max-w-full w-full rounded-lg my-4 shadow-sm border border-black/10"
+                                >
+                                  Your browser does not support the video tag.
+                                </video>
+                              );
+                            }
+                            
+                            return (
+                              <a href={href} target="_blank" rel="noopener noreferrer" className="text-[#856FE6] hover:underline break-all" {...props}>
+                                {children}
+                              </a>
+                            );
+                          },
                           img: ({ node, src, alt, ...props }: any) => {
                             let finalSrc = src;
                             if (src && !src.startsWith("http") && !src.startsWith("data:")) {
