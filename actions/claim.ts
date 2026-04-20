@@ -12,7 +12,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 const claimSchema = z.object({
   firstName: z.string().min(1, "First name is required").max(100, "First name too long"),
   lastName: z.string().min(1, "Last name is required").max(100, "Last name too long"),
-  githubEmail: z.string().email(),
+  githubEmail: z.string().optional(),
   contactEmail: z.string().email("Invalid email format"),
   phone: z.string().regex(/^[6-9]\d{9}$/, "Mobile number must be 10 digits, start with 6-9, and be a valid Indian number."),
   altPhone: z.string().optional().or(z.literal('')),
@@ -75,36 +75,50 @@ export async function submitClaim(data: any) {
 
     try {
       await resend.emails.send({
-        from: 'Open Directory <noreply@opendirectory.dev>',
+        from: 'Paras from OpenDirectory <merch@opendirectory.dev>',
+        replyTo: 'paras@varnan.tech',
         to: validData.contactEmail,
-        subject: 'Merch Claim Acknowledgment - Open Directory 🎉',
+        subject: 'Your Open Directory Merch is on the way! 🚀',
         html: `
-          <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; background-color: #ffffff; border: 1px solid #e5e7eb; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);">
-            <img src="https://www.opendirectory.dev/opendirectory_banner.webp" alt="Open Directory Banner" style="width: 100%; height: auto; display: block; border-bottom: 1px solid #e5e7eb;" />
-            <div style="padding: 32px;">
-              <h2 style="color: #111827; margin-top: 0; font-size: 24px;">Merch Claim Confirmed! 🎉</h2>
-              <p style="color: #374151; font-size: 16px; line-height: 1.6;">Hi <strong>${validData.firstName}</strong>,</p>
-              <p style="color: #374151; font-size: 16px; line-height: 1.6;">Thank you for your amazing contributions to Open Directory. We have successfully received your shipping details for your well-deserved merch.</p>
+          <div style="font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 40px auto; background-color: #ffffff; border: 1px solid #eaeaea; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);">
+            <img src="https://www.opendirectory.dev/opendirectory_banner.webp" alt="Open Directory Banner" style="width: 100%; height: auto; display: block;" />
+            <div style="padding: 40px 32px;">
+              <h2 style="color: #111827; margin-top: 0; font-size: 22px; font-weight: 600; letter-spacing: -0.5px;">You're getting merch! 🎉</h2>
+              <p style="color: #4b5563; font-size: 15px; line-height: 1.6; margin-bottom: 24px;">Hi ${validData.firstName},</p>
+              <p style="color: #4b5563; font-size: 15px; line-height: 1.6; margin-bottom: 32px;">Thanks for your amazing contribution! As a token of appreciation from our side, we are thrilled to send you some exclusive Open Directory merch.</p>
               
-              <div style="background-color: #f3f4f6; padding: 20px; border-radius: 8px; margin: 28px 0; border: 1px solid #e5e7eb;">
-                <h3 style="margin-top: 0; margin-bottom: 12px; color: #111827; font-size: 16px;">Order Summary</h3>
-                <p style="margin: 0; color: #4b5563; font-size: 15px; line-height: 1.5;"><strong>Shipping to:</strong><br/>
-                ${validData.firstName} ${validData.lastName}<br/>
-                ${validData.city}, ${validData.state}, ${validData.country}<br/>
-                ${validData.pinCode}</p>
-                <p style="margin: 16px 0 0 0; color: #4b5563; font-size: 15px;"><strong>Shirt Size:</strong> ${validData.shirtSize}</p>
+              <div style="border-top: 1px solid #eaeaea; border-bottom: 1px solid #eaeaea; padding: 24px 0; margin-bottom: 32px;">
+                <h3 style="margin-top: 0; margin-bottom: 16px; color: #111827; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">Delivery Details</h3>
+                <table style="width: 100%; border-collapse: collapse;">
+                  <tr>
+                    <td style="padding: 4px 0; color: #6b7280; font-size: 14px; width: 100px;">Name</td>
+                    <td style="padding: 4px 0; color: #111827; font-size: 14px; font-weight: 500;">${validData.firstName} ${validData.lastName}</td>
+                  </tr>
+                  <tr>
+                    <td style="padding: 4px 0; color: #6b7280; font-size: 14px; align-items: top;">Address</td>
+                    <td style="padding: 4px 0; color: #111827; font-size: 14px; font-weight: 500;">
+                      ${validData.addressLine1}<br/>
+                      ${validData.addressLine2 ? validData.addressLine2 + '<br/>' : ''}
+                      ${validData.city}, ${validData.state}<br/>
+                      ${validData.country} - ${validData.pinCode}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="padding: 4px 0; color: #6b7280; font-size: 14px;">Shirt Size</td>
+                    <td style="padding: 4px 0; color: #111827; font-size: 14px; font-weight: 500;">${validData.shirtSize}</td>
+                  </tr>
+                </table>
               </div>
 
-              <p style="color: #374151; font-size: 16px; line-height: 1.6;">In <strong>4 to 5 business days</strong>, we will send you an update and a tracking number for your t-shirt and merch package.</p>
-              <p style="color: #374151; font-size: 16px; line-height: 1.6;">Keep building awesome things!</p>
+              <p style="color: #4b5563; font-size: 15px; line-height: 1.6;">We'll process your shipment shortly. Expect a tracking update in your inbox within <strong>4 to 5 business days</strong>.</p>
+              <p style="color: #4b5563; font-size: 15px; line-height: 1.6; margin-bottom: 32px;">Keep building awesome things!</p>
               
-              <br/>
-              <p style="color: #374151; font-size: 16px; line-height: 1.6; margin-bottom: 4px;">Best regards,</p>
-              <p style="color: #111827; font-size: 16px; font-weight: bold; margin-top: 0;">The Open Directory Team</p>
+              <p style="color: #111827; font-size: 15px; font-weight: 600; margin: 0;">Paras</p>
+              <p style="color: #6b7280; font-size: 14px; margin-top: 4px;">Open Directory Team</p>
             </div>
-            <div style="background-color: #f9fafb; padding: 20px; text-align: center; border-top: 1px solid #e5e7eb;">
-              <p style="color: #6b7280; font-size: 13px; margin: 0;">© 2026 Open Directory. All rights reserved.<br/>
-              <a href="https://www.opendirectory.dev" style="color: #2563eb; text-decoration: none;">www.opendirectory.dev</a></p>
+            <div style="background-color: #fafafa; padding: 24px 32px; border-top: 1px solid #eaeaea; text-align: center;">
+              <p style="color: #9ca3af; font-size: 12px; margin: 0;">© 2026 Open Directory. All rights reserved.<br/>
+              <a href="https://www.opendirectory.dev" style="color: #6b7280; text-decoration: underline;">opendirectory.dev</a></p>
             </div>
           </div>
         `,
