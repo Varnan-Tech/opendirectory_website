@@ -1,11 +1,16 @@
 import { auth, signIn } from '@/auth';
 import ClaimForm from './ClaimForm';
 import { AnimatedLogo } from '@/components/AnimatedLogo';
+import { db } from '@/db';
+import { mergedContributors } from '@/db/schema';
+import { eq } from 'drizzle-orm';
+import IneligibleMessage from './IneligibleMessage';
+import AlreadyClaimedMessage from './AlreadyClaimedMessage';
 
 export default async function ClaimPage() {
   const session = await auth();
 
-  if (!session?.user?.name) {
+  if (!session?.user) {
     return (
       <div className="min-h-screen bg-background text-foreground flex flex-col items-center justify-center p-4 py-12">
         <div className="w-full max-w-2xl bg-card border border-border rounded-2xl p-8 shadow-xl text-center flex flex-col items-center">
@@ -29,9 +34,27 @@ export default async function ClaimPage() {
     );
   }
 
+  const githubUsername = (session.user as any).login;
+
+  if (!githubUsername) {
+    return <IneligibleMessage />;
+  }
+
+  const contributor = await db.query.mergedContributors.findFirst({
+    where: eq(mergedContributors.githubUsername, githubUsername),
+  });
+
+  if (!contributor) {
+    return <IneligibleMessage />;
+  }
+
+  if (contributor.hasClaimed) {
+    return <AlreadyClaimedMessage />;
+  }
+
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col items-center justify-center p-4 py-12">
-      <ClaimForm githubEmail={session.user.email || session.user.name} />
+      <ClaimForm githubEmail={session.user.email || githubUsername} />
     </div>
   );
 }

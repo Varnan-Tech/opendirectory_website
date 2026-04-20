@@ -28,7 +28,7 @@ const claimSchema = z.object({
 export async function submitClaim(data: any) {
   try {
     const session = await auth();
-    if (!session?.user?.name) {
+    if (!session || !session.user || !(session.user as any).login) {
       return { error: "Unauthorized. Please sign in with GitHub." };
     }
 
@@ -38,7 +38,7 @@ export async function submitClaim(data: any) {
     }
     const validData = parsedData.data;
 
-    const githubUsername = session.user.name;
+    const githubUsername = (session.user as any).login;
 
     const contributor = await db.query.mergedContributors.findFirst({
       where: eq(mergedContributors.githubUsername, githubUsername),
