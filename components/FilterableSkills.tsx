@@ -96,7 +96,7 @@ export function FilterableSkills({ initialRepos }: FilterableSkillsProps) {
               <button
                 key={tag}
                 onClick={() => setActiveTag(tag)}
-                className={`px-3 py-1.5 rounded-md text-[13px] font-medium transition-all duration-200 text-left flex items-center justify-between ${
+                className={`px-3 py-1.5 rounded-md text-[13px] font-medium transition-all duration-200 text-left flex items-center justify-between gap-1.5 ${
                   activeTag === tag 
                     ? "bg-[#856FE6]/10 text-[#856FE6]" 
                     : "bg-transparent text-black/60 hover:bg-black/5 hover:text-black"
@@ -118,7 +118,7 @@ export function FilterableSkills({ initialRepos }: FilterableSkillsProps) {
             <span className="text-black font-semibold">All {filteredRepos.length}</span>
             {allTags.filter(t => t !== "All" && t !== "Skill").slice(0, 6).map(t => (
               <span key={t} className="hidden sm:inline-block cursor-pointer hover:text-black transition-colors" onClick={() => setActiveTag(t)}>
-                {t.toLowerCase()} {initialRepos.filter(r => getTagsForRepo(r).includes(t)).length}
+                {t.toLowerCase()} <span className="ml-0.5 opacity-60 text-[11.5px]">{initialRepos.filter(r => getTagsForRepo(r).includes(t)).length}</span>
               </span>
             ))}
           </div>

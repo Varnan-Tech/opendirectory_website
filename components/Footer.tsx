@@ -7,28 +7,30 @@ export function Footer() {
   return (
     <footer className="w-full border-t border-black/[0.05] bg-white pt-16 pb-8 overflow-hidden relative">
       <div className="max-w-[1200px] mx-auto px-6 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 md:gap-8 mb-12">
           <div className="col-span-1 md:col-span-2">
             <h4 className="text-[15px] font-medium text-black mb-4 tracking-tight">Open Directory</h4>
             <p className="text-black/50 text-[13px] max-w-sm leading-relaxed font-normal">
-              The unified home for open-source agent skills and automation pipelines designed for autonomous agents.
+              The unified home for open-source GTM agent skills and automation pipelines designed for autonomous agents.
             </p>
           </div>
           
-          <div>
-            <h4 className="text-[13px] font-medium text-black mb-4 tracking-tight">Resources</h4>
-            <ul className="space-y-3 text-[13px] font-normal text-black/50">
-              <li><a href="/docs" className="hover:text-black transition-colors">Documentation</a></li>
-              <li><a href="https://github.com/Varnan-Tech/opendirectory" target="_blank" rel="noopener noreferrer" className="hover:text-black transition-colors">GitHub</a></li>
-            </ul>
-          </div>
-          
-          <div>
-            <h4 className="text-[13px] font-medium text-black mb-4 tracking-tight">Legal</h4>
-            <ul className="space-y-3 text-[13px] font-normal text-black/50">
-              <li><a href="/privacy" className="hover:text-black transition-colors">Privacy</a></li>
-              <li><a href="/terms" className="hover:text-black transition-colors">Terms</a></li>
-            </ul>
+          <div className="grid grid-cols-2 gap-8 md:col-span-2">
+            <div>
+              <h4 className="text-[13px] font-medium text-black mb-4 tracking-tight">Resources</h4>
+              <ul className="space-y-3 text-[13px] font-normal text-black/50">
+                <li><a href="/docs" className="hover:text-black transition-colors">Documentation</a></li>
+                <li><a href="https://github.com/Varnan-Tech/opendirectory" target="_blank" rel="noopener noreferrer" className="hover:text-black transition-colors">GitHub</a></li>
+              </ul>
+            </div>
+            
+            <div>
+              <h4 className="text-[13px] font-medium text-black mb-4 tracking-tight">Legal</h4>
+              <ul className="space-y-3 text-[13px] font-normal text-black/50">
+                <li><a href="/privacy" className="hover:text-black transition-colors">Privacy</a></li>
+                <li><a href="/terms" className="hover:text-black transition-colors">Terms</a></li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>

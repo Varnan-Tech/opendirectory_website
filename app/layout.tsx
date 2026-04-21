@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://opendirectory.dev"),
   title: "Open Directory | Open-source agent skills and MCP servers",
   description:
-    "The unified home for open-source agent skills, CLI utilities, and automation pipelines designed for autonomous agents like Claude Code, OpenCode, and Gemini.",
+    "The unified home for open-source GTM agent skills, CLI utilities, and automation pipelines designed for autonomous agents like Claude Code, OpenCode, and Gemini.",
   keywords: ["autonomous agents", "open source", "MCP servers", "Claude Code", "OpenCode", "developer tools", "skills"],
   icons: {
     icon: "/favicon.png",
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "Open Directory | Agent Skills",
-    description: "The unified home for open-source agent skills and automation pipelines designed for autonomous agents.",
+    description: "The unified home for open-source GTM agent skills and automation pipelines designed for autonomous agents.",
     url: "https://opendirectory.dev",
     siteName: "Open Directory",
     images: [
@@ -50,7 +50,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Open Directory | Agent Skills",
-    description: "The unified home for open-source agent skills and automation pipelines designed for autonomous agents.",
+    description: "The unified home for open-source GTM agent skills and automation pipelines designed for autonomous agents.",
     images: ["/og-image.webp"],
   },
   robots: {

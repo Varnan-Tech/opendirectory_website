@@ -48,6 +48,7 @@ export default function DocsPage() {
               <p className="text-black/80 leading-relaxed mb-6">
                 Users who exclusively use Anthropic's Claude Code can add Open Directory as a native community marketplace directly inside their Claude interface. This allows you to install skills using Claude's built-in plugin system.
               </p>
+
               <div className="space-y-4">
                 <div>
                   <h4 className="text-sm font-semibold text-black/70 mb-2">1. Add the Open Directory marketplace</h4>
@@ -59,6 +60,54 @@ export default function DocsPage() {
                   <h4 className="text-sm font-semibold text-black/70 mb-2">2. Install a skill directly</h4>
                   <div className="bg-black text-white p-4 rounded-lg font-mono text-sm shadow-inner">
                     /plugin install [SKILL-NAME]@opendirectory-marketplace
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <h2 className="text-2xl font-semibold tracking-tight mt-12 mb-6 border-b border-black/10 pb-4">
+              Manual Installation (Claude Desktop / Web App)
+            </h2>
+            <div className="bg-[#856FE6]/5 border border-[#856FE6]/20 rounded-xl p-8 mb-12">
+              <p className="text-black/80 leading-relaxed mb-6">
+                If you use the visual Claude Desktop App or the Claude.ai Web Interface, you can install skills manually via the Custom Skills interface.
+              </p>
+              
+              <div className="mb-8">
+                <video 
+                  src="/tutorial.webm" 
+                  controls 
+                  playsInline
+                  preload="metadata"
+                  className="max-w-full w-full rounded-lg shadow-sm border border-black/10 block bg-black"
+                >
+                  <source src="/tutorial.webm" type="video/webm" />
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+
+              <div className="space-y-8">
+                <div>
+                  <h3 className="text-xl font-semibold tracking-tight mb-4">Step 1: Download the skill from GitHub</h3>
+                  <ul className="list-decimal pl-5 space-y-2 text-black/80">
+                    <li>Copy the URL of this specific skill folder from your browser's address bar.</li>
+                    <li>Go to <a href="https://download-directory.github.io/" target="_blank" rel="noopener noreferrer" className="text-[#856FE6] hover:underline font-medium">download-directory.github.io</a>.</li>
+                    <li>Paste the URL and click <strong>Enter</strong> to download.</li>
+                  </ul>
+                </div>
+                
+                <div>
+                  <h3 className="text-xl font-semibold tracking-tight mb-4">Step 2: Install the Skill in Claude</h3>
+                  <ul className="list-decimal pl-5 space-y-2 text-black/80 mb-4">
+                    <li>Open your <strong>Claude desktop app</strong>.</li>
+                    <li>Go to the sidebar on the left side and click on the <strong>Customize</strong> section.</li>
+                    <li>Click on the <strong>Skills</strong> tab, then click on the <strong>+</strong> (plus) icon button to create a new skill.</li>
+                    <li>Choose the option to <strong>Upload a skill</strong>, and drag and drop the <code>.zip</code> file (or you can extract it and drop the folder, both work).</li>
+                  </ul>
+                  <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-5 mt-4">
+                    <p className="text-yellow-800 text-sm">
+                      <strong>Note:</strong> For some skills (like <code>position-me</code>), the <code>SKILL.md</code> file might be located inside a subfolder. Always make sure you are uploading the specific folder that contains the <code>SKILL.md</code> file!
+                    </p>
                   </div>
                 </div>
               </div>

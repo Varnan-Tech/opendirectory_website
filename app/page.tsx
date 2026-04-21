@@ -165,14 +165,21 @@ async function getGitHubStats(): Promise<GitHubRepo[]> {
            });
            if (readmeRes.ok) {
              const readmeText = await readmeRes.text();
-             const lines = readmeText.split('\n');
-             for (const line of lines) {
-               const trimmed = line.trim();
-               if (trimmed && !trimmed.startsWith('#') && !trimmed.startsWith('<') && !trimmed.startsWith('![')) {
-                 description = trimmed;
-                 break;
-               }
-             }
+              const lines = readmeText.split('\n');
+              let inCodeBlock = false;
+              for (const line of lines) {
+                const trimmed = line.trim();
+                if (trimmed.startsWith('```')) {
+                  inCodeBlock = !inCodeBlock;
+                  continue;
+                }
+                if (inCodeBlock) continue;
+                if (trimmed.toLowerCase().startsWith('## install')) break;
+                if (trimmed && !trimmed.startsWith('#') && !trimmed.startsWith('<') && !trimmed.startsWith('![')) {
+                  description = trimmed;
+                  break;
+                }
+              }
            }
         }
       } catch (e: any) {
@@ -234,12 +241,14 @@ export default async function Home() {
 
         <div className="w-full max-w-[1300px] mx-auto px-6 py-4 relative z-20">
           <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
-            <div className="flex-1 lg:flex-[0.45] flex flex-col items-start gap-6 min-w-0">
-              <AnimatedHero />
+            <div className="flex-1 lg:flex-[0.45] flex flex-col items-center lg:items-start text-center lg:text-left gap-6 min-w-0">
+              <div className="flex flex-col items-center lg:items-start gap-2 lg:gap-4">
+                <AnimatedHero />
 
-              <p className="text-base md:text-lg text-black/60 max-w-lg leading-relaxed text-balance font-normal">
-                The unified home for open-source agent skills and automation pipelines designed for autonomous agents.
-              </p>
+                <p className="text-base md:text-lg text-black/60 max-w-lg leading-relaxed text-balance font-normal">
+                  The unified home for open-source GTM agent skills and automation pipelines designed for autonomous agents.
+                </p>
+              </div>
               <InstallCommand />
             </div>
 

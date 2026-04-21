@@ -326,52 +326,69 @@ export function BentoGrid({ repos }: BentoGridProps) {
               viewport={{ once: true }}
               transition={{ duration: 0.2, delay: i * 0.02 }}
               onClick={() => setSelectedRepo(item)}
-              className="group flex flex-col md:flex-row md:items-center justify-between p-4 bg-white border border-black/[0.08] rounded-xl hover:border-[#856FE6]/40 hover:shadow-[0_0_15px_rgba(133,111,230,0.1)] transition-all duration-200 cursor-pointer"
+              className="group relative flex flex-col p-4 bg-white border border-black/[0.08] rounded-xl hover:border-[#856FE6]/40 hover:shadow-[0_0_15px_rgba(133,111,230,0.1)] transition-all duration-200 cursor-pointer"
             >
-              <div className="flex items-start gap-4 flex-1 min-w-0">
-                <div className="hidden md:flex mt-1 text-black/30 font-mono text-[12px] min-w-[24px]">
-                  {(i + 1).toString().padStart(2, '0')}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-3 mb-1.5">
-                    <BrandIcon name={item.name} />
-                    <h4 
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        window.open(`https://github.com/Varnan-Tech/opendirectory/tree/main/skills/${item.name}`, '_blank');
-                      }}
-                      className="text-[15px] font-mono font-semibold text-black/80 group-hover:text-[#856FE6] tracking-tight transition-colors break-all"
-                    >
-                      {item.name}
-                    </h4>
-                    <span className="hidden sm:inline-block text-[12px] text-black/40 font-mono">
-                      Varnan-Tech/skills
-                    </span>
-                    <CategoryTags name={item.name} description={item.description} />
+              <div className="flex flex-col items-start gap-4 w-full">
+                <div className="flex flex-col items-start w-full">
+                  <div className="flex items-start gap-4 w-full">
+                    <div className="hidden md:flex mt-1 text-black/30 font-mono text-[12px] min-w-[24px]">
+                      {(i + 1).toString().padStart(2, '0')}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-start md:items-center justify-between mb-1.5 w-full gap-2">
+                        <div className="flex items-center gap-3">
+                          <BrandIcon name={item.name} />
+                          <h4 
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              window.open(`https://github.com/Varnan-Tech/opendirectory/tree/main/skills/${item.name}`, '_blank');
+                            }}
+                            className="text-[15px] font-mono font-semibold text-black/80 group-hover:text-[#856FE6] tracking-tight transition-colors break-all"
+                          >
+                            {item.name}
+                          </h4>
+                          <span className="hidden sm:inline-block text-[12px] text-black/40 font-mono shrink-0">
+                            Varnan-Tech/skills
+                          </span>
+                        </div>
+                        <div className="shrink-0 hidden md:block">
+                          <CategoryTags name={item.name} description={item.description} />
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-center justify-between mt-1 mb-3 md:hidden">
+                        <CategoryTags name={item.name} description={item.description} />
+                      </div>
+                      
+                      <p className="text-[13px] text-black/60 leading-relaxed font-normal truncate max-w-full">
+                        {item.description || "Open source agent skill pipeline and automation logic."}
+                      </p>
+                      
+                      <div className="flex md:hidden items-center justify-end w-full relative z-20 mt-3 pt-3 border-t border-black/[0.04]">
+                        <InstallButton name={item.name} />
+                      </div>
+                    </div>
                   </div>
-                  <p className="text-[13px] text-black/60 leading-relaxed font-normal truncate max-w-full">
-                    {item.description || "Open source agent skill pipeline and automation logic."}
-                  </p>
-                </div>
-              </div>
-              
-              <div className="flex items-center gap-6 mt-4 md:mt-0 pl-[40px] md:pl-4">
-                <div className="flex items-center gap-4 text-[12px] font-medium text-black/40">
-                  {item.stars > 0 || item.forks > 0 ? (
-                    <>
-                      <div className="flex items-center gap-1 group-hover:text-[#856FE6] transition-colors">
-                        <StarIcon />
-                        <span>{item.stars}</span>
-                      </div>
-                      <div className="flex items-center gap-1 group-hover:text-[#856FE6] transition-colors">
-                        <ForkIcon />
-                        <span>{item.forks}</span>
-                      </div>
-                    </>
-                  ) : null}
-                </div>
-                <div className="relative z-20">
-                  <InstallButton name={item.name} />
+                  
+                  <div className="hidden md:flex items-center justify-between w-full relative z-20 pl-[40px] mt-1">
+                    <div className="flex items-center gap-4 text-[12px] font-medium text-black/40">
+                      {item.stars > 0 || item.forks > 0 ? (
+                        <>
+                          <div className="flex items-center gap-1 group-hover:text-[#856FE6] transition-colors">
+                            <StarIcon />
+                            <span>{item.stars}</span>
+                          </div>
+                          <div className="flex items-center gap-1 group-hover:text-[#856FE6] transition-colors">
+                            <ForkIcon />
+                            <span>{item.forks}</span>
+                          </div>
+                        </>
+                      ) : null}
+                    </div>
+                    <div className="ml-auto">
+                      <InstallButton name={item.name} />
+                    </div>
+                  </div>
                 </div>
               </div>
             </motion.div>
@@ -467,39 +484,60 @@ export function BentoGrid({ repos }: BentoGridProps) {
                         rehypePlugins={[rehypeRaw, rehypeHighlight]}
                         components={{
                           p: ({ node, children, ...props }: any) => {
+                            const childrenArray = React.Children.toArray(children);
                             if (
-                              children && 
-                              children.length === 1 && 
-                              typeof children[0] === 'string' && 
-                              children[0].startsWith("https://github.com/user-attachments/assets/")
+                              childrenArray.length === 1 && 
+                              typeof childrenArray[0] === 'string' && 
+                              childrenArray[0].includes("github.com/user-attachments/assets/")
                             ) {
-                              const href = children[0];
+                              const href = childrenArray[0];
                               return (
-                                <video 
-                                  src={href} 
-                                  controls 
-                                  className="max-w-full w-full rounded-lg my-4 shadow-sm border border-black/10"
-                                >
-                                  Your browser does not support the video tag.
-                                </video>
+                                <span className="block my-4">
+                                  <video 
+                                    src="/tutorial.webm" 
+                                    controls 
+                                    playsInline
+                                    preload="metadata"
+                                    className="max-w-full w-full rounded-lg shadow-sm border border-black/10 block bg-black"
+                                  >
+                                    <source src="/tutorial.webm" type="video/webm" />
+                                    Your browser does not support the video tag.
+                                  </video>
+                                </span>
                               );
                             }
                             
                             return <p {...props}>{children}</p>;
                           },
                           a: ({ node, href, children, ...props }: any) => {
-                            const isGithubAsset = href && href.startsWith("https://github.com/user-attachments/assets/");
-                            const isTextMatch = children && children.length === 1 && typeof children[0] === 'string' && children[0] === href;
+                            const isVideoUrl = href && (
+                              href.includes("github.com/user-attachments/assets/") || 
+                              href.endsWith(".mp4") || 
+                              href.endsWith(".webm") || 
+                              href.endsWith(".ogg")
+                            );
                             
-                            if (isGithubAsset && isTextMatch) {
+                            if (isVideoUrl) {
+                              const childrenArray = React.Children.toArray(children);
+                              const textContent = childrenArray.length > 0 ? childrenArray[0] : '';
+                              const isTextMatch = typeof textContent === 'string' && textContent === href;
+                              
                               return (
-                                <video 
-                                  src={href} 
-                                  controls 
-                                  className="max-w-full w-full rounded-lg my-4 shadow-sm border border-black/10"
-                                >
-                                  Your browser does not support the video tag.
-                                </video>
+                                <span className="block my-4">
+                                  {!isTextMatch && childrenArray.length > 0 && (
+                                    <span className="block mb-2 text-[14px] font-medium text-black/80">{children}</span>
+                                  )}
+                                  <video 
+                                    src="/tutorial.webm" 
+                                    controls 
+                                    playsInline
+                                    preload="metadata"
+                                    className="max-w-full w-full rounded-lg shadow-sm border border-black/10 block bg-black"
+                                  >
+                                    <source src="/tutorial.webm" type="video/webm" />
+                                    Your browser does not support the video tag.
+                                  </video>
+                                </span>
                               );
                             }
                             

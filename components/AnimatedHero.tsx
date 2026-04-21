@@ -4,8 +4,8 @@ import React from 'react';
 import { motion } from 'framer-motion';
 
 export function AnimatedHero() {
-  const text1 = "THE EXECUTION LAYER";
-  const text2 = "FOR YOUR SYSTEM.";
+  const text1 = "THE GTM SKILLS";
+  const text2 = "FOR YOUR AGENT.";
   
   const container = {
     hidden: { opacity: 1 },
@@ -25,7 +25,7 @@ export function AnimatedHero() {
   };
 
   return (
-    <div className="relative w-full flex flex-col items-start text-left">
+    <div className="relative w-full flex flex-col items-center lg:items-start text-center lg:text-left">
       <motion.h1 
         variants={container}
         initial="hidden"
