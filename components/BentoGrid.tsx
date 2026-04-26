@@ -43,9 +43,12 @@ export interface GitHubRepo {
 
 interface BentoGridProps {
   repos: GitHubRepo[];
+  selectedRepo: GitHubRepo | null;
+  onSelect: (repo: GitHubRepo) => void;
+  onClose: () => void;
 }
 
-function BrandIcon({ name }: { name: string }) {
+export function BrandIcon({ name }: { name: string }) {
   const lowerName = name.toLowerCase();
   
   if (lowerName.includes("google") || lowerName.includes("trends")) {
@@ -255,8 +258,7 @@ function ForkIcon() {
   );
 }
 
-export function BentoGrid({ repos }: BentoGridProps) {
-  const [selectedRepo, setSelectedRepo] = useState<GitHubRepo | null>(null);
+export function BentoGrid({ repos, selectedRepo, onSelect, onClose }: BentoGridProps) {
   const [readme, setReadme] = useState<string>("");
   const [isLoadingReadme, setIsLoadingReadme] = useState(false);
   const [copiedPrompt, setCopiedPrompt] = useState(false);
@@ -325,7 +327,7 @@ export function BentoGrid({ repos }: BentoGridProps) {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.2, delay: i * 0.02 }}
-              onClick={() => setSelectedRepo(item)}
+              onClick={() => onSelect(item)}
               className="group relative flex flex-col p-4 bg-white border border-black/[0.08] rounded-xl hover:border-[#856FE6]/40 hover:shadow-[0_0_15px_rgba(133,111,230,0.1)] transition-all duration-200 cursor-pointer"
             >
               <div className="flex flex-col items-start gap-4 w-full">
@@ -402,7 +404,7 @@ export function BentoGrid({ repos }: BentoGridProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={() => setSelectedRepo(null)}
+            onClick={() => onClose()}
             className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
           >
             <motion.div
@@ -425,7 +427,7 @@ export function BentoGrid({ repos }: BentoGridProps) {
                   </a>
                 </div>
                 <button
-                  onClick={() => setSelectedRepo(null)}
+                  onClick={() => onClose()}
                   className="p-2 rounded-full hover:bg-black/5 transition-colors"
                 >
                   <X className="w-5 h-5 text-black/50" />

@@ -4,6 +4,7 @@ import React, { useState, useMemo } from "react";
 import dynamic from "next/dynamic";
 import type { GitHubRepo } from "./BentoGrid";
 import { Search } from "lucide-react";
+import { FeaturedSkillsSection } from "./FeaturedSkillsSection";
 
 const BentoGrid = dynamic(() => import("./BentoGrid").then(mod => mod.BentoGrid), {
   ssr: true,
@@ -45,6 +46,7 @@ function getTagsForRepo(repo: GitHubRepo): string[] {
 export function FilterableSkills({ initialRepos }: FilterableSkillsProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTag, setActiveTag] = useState<string>("All");
+  const [selectedRepo, setSelectedRepo] = useState<GitHubRepo | null>(null);
 
   const allTags = useMemo(() => {
     const tagsSet = new Set<string>();
@@ -72,8 +74,11 @@ export function FilterableSkills({ initialRepos }: FilterableSkillsProps) {
   }, [initialRepos, searchQuery, activeTag]);
 
   return (
-    <div className="flex flex-col lg:flex-row gap-10 w-full">
-      <div className="flex flex-col gap-6 w-full lg:w-64 shrink-0 lg:sticky lg:top-24 self-start">
+    <div className="flex flex-col gap-10 w-full">
+      <FeaturedSkillsSection allRepos={initialRepos} onSelect={setSelectedRepo} />
+
+      <div className="flex flex-col lg:flex-row gap-10 w-full">
+        <div className="flex flex-col gap-6 w-full lg:w-64 shrink-0 lg:sticky lg:top-24 self-start">
         <h3 className="text-xl font-bold tracking-tight text-black border-b border-black/[0.08] pb-3">Find Skills</h3>
         
         <div className="relative w-full">
@@ -125,10 +130,11 @@ export function FilterableSkills({ initialRepos }: FilterableSkillsProps) {
         </div>
         <div className="relative">
           <div className="max-h-[850px] overflow-y-auto pr-2 pb-8 [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-black/10 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-black/20">
-            <BentoGrid repos={filteredRepos} />
+            <BentoGrid repos={filteredRepos} selectedRepo={selectedRepo} onSelect={setSelectedRepo} onClose={() => setSelectedRepo(null)} />
           </div>
           <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-[#FAFAFA] to-transparent z-10" />
         </div>
+      </div>
       </div>
     </div>
   );
