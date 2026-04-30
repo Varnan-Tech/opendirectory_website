@@ -147,7 +147,7 @@ export function FeaturedSkillsSection({ allRepos, onSelect }: FeaturedSkillsSect
         <div className="absolute inset-y-0 left-0 w-8 md:w-16 bg-gradient-to-r from-[#FAFAFA] to-transparent z-10 pointer-events-none" />
         <div className="absolute inset-y-0 right-0 w-8 md:w-16 bg-gradient-to-l from-[#FAFAFA] to-transparent z-10 pointer-events-none" />
         
-        <div className="px-6 [mask-image:linear-gradient(to_right,transparent,black_5%,black_95%,transparent)]">
+        <div className="px-6">
           <InfiniteSlider gap={16} duration={80} pauseOnHover={true}>
             {featured.map((skill, i) => (
             <motion.div
