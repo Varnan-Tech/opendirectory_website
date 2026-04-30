@@ -276,7 +276,7 @@ export default async function Home() {
         <div className="flex flex-col gap-16">
           <div className="max-w-2xl">
             <h2 className="text-3xl md:text-4xl font-medium tracking-tighter mb-4 text-black">
-              Featured Agent Skills
+              Popular Agent Skills
             </h2>
             <p className="text-black/50 text-[15px] leading-relaxed max-w-lg">
               A collection of high-performance agent skills and CLI utilities to help you build autonomous workflows with precision.
