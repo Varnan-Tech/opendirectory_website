@@ -32,7 +32,7 @@ export default function TermsPage() {
               1. Acceptance of Terms
             </h2>
             <p className="mb-8">
-              By accessing and using the Open Directory platform, skills, tools, and MCP servers provided by Varnan-Tech, you accept and agree to be bound by the terms and provisions of this agreement.
+              This project is owned and operated by Varnan (legal name: Vimmi Naresh Private Limited). By accessing and using the Open Directory platform, skills, tools, and MCP servers provided by Vimmi Naresh Private Limited, you accept and agree to be bound by the terms and provisions of this agreement.
             </p>
 
             <h2 className="text-2xl font-semibold tracking-tight text-black mt-12 mb-6 border-b border-black/10 pb-4">
@@ -53,14 +53,14 @@ export default function TermsPage() {
               4. Limitation of Liability
             </h2>
             <p className="mb-8">
-              In no event shall Varnan-Tech or its contributors be liable for any direct, indirect, incidental, special, or consequential damages arising out of or in connection with your use of or inability to use the skills and tools provided, including any damages resulting from the execution of our agents or pipelines on your local systems.
+              In no event shall Vimmi Naresh Private Limited or its contributors be liable for any direct, indirect, incidental, special, or consequential damages arising out of or in connection with your use of or inability to use the skills and tools provided, including any damages resulting from the execution of our agents or pipelines on your local systems.
             </p>
 
             <h2 className="text-2xl font-semibold tracking-tight text-black mt-12 mb-6 border-b border-black/10 pb-4">
               5. Governing Law
             </h2>
             <p className="mb-8">
-              These Terms shall be governed by and construed in accordance with the laws of the jurisdiction in which Varnan-Tech operates, without regard to its conflict of law provisions.
+              These Terms shall be governed by and construed in accordance with the laws of the jurisdiction in which Vimmi Naresh Private Limited operates, without regard to its conflict of law provisions.
             </p>
           </div>
         </div>

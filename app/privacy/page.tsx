@@ -28,6 +28,10 @@ export default function PrivacyPage() {
               Last updated: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
             </p>
 
+            <p className="mb-6">
+              This project is owned and operated by Varnan (legal name: Vimmi Naresh Private Limited).
+            </p>
+
             <h2 className="text-2xl font-semibold tracking-tight text-black mt-12 mb-6 border-b border-black/10 pb-4">
               1. Information We Collect
             </h2>
@@ -52,14 +56,24 @@ export default function PrivacyPage() {
             </ul>
 
             <h2 className="text-2xl font-semibold tracking-tight text-black mt-12 mb-6 border-b border-black/10 pb-4">
-              3. Open Source Repositories
+              3. Cookies and Tracking Technologies
+            </h2>
+            <p className="mb-4">
+              We, along with our third-party service providers, use cookies, web beacons, and similar tracking technologies to enhance user experience, analyze website performance, and gather statistical data regarding platform usage. These technologies help us understand user interaction, improve our services, and ensure security.
+            </p>
+            <p className="mb-8">
+              By accessing and navigating our platform, you acknowledge and consent to the deployment of these technologies as described in this policy. You may adjust your browser settings to refuse cookies, though doing so may impact certain functionalities of our services.
+            </p>
+
+            <h2 className="text-2xl font-semibold tracking-tight text-black mt-12 mb-6 border-b border-black/10 pb-4">
+              4. Open Source Repositories
             </h2>
             <p className="mb-8">
               Our skills and tools are distributed as open-source repositories on GitHub. When you clone, fork, or interact with these repositories, your interactions are subject to GitHub's privacy policy and terms of service.
             </p>
 
             <h2 className="text-2xl font-semibold tracking-tight text-black mt-12 mb-6 border-b border-black/10 pb-4">
-              4. Contact Us
+              5. Contact Us
             </h2>
             <p className="mb-8">
               If you have any questions about this Privacy Policy, please contact us through our official GitHub organization page at <a href="https://github.com/Varnan-Tech" className="text-[#856FE6] hover:underline">Varnan-Tech</a>.
