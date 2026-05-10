@@ -45,7 +45,7 @@ export function GitHubStarButton({ repos }: { repos?: string[] }) {
         borderWidth={1}
         className="rounded-3xl h-8 px-3.5 cursor-pointer hover:bg-black/80 transition-colors relative"
       >
-        <span className="flex items-center gap-1.5 relative z-10 text-white">
+          <span className="flex items-center gap-1.5 relative z-10 text-white">
           <GitHubIcon className="w-3.5 h-3.5 text-white" />
           <motion.div
             animate={{
@@ -61,7 +61,7 @@ export function GitHubStarButton({ repos }: { repos?: string[] }) {
           >
             <Star className="w-3.5 h-3.5 text-yellow-400 fill-yellow-400 drop-shadow-[0_0_5px_rgba(250,204,21,0.8)]" />
           </motion.div>
-          <span className="text-xs font-medium text-white group-hover:text-yellow-100 transition-colors">
+          <span className="hidden sm:inline text-xs font-medium text-white group-hover:text-yellow-100 transition-colors">
             Star our repo{" "}
             {stars !== null && (
               <motion.span 
@@ -74,6 +74,16 @@ export function GitHubStarButton({ repos }: { repos?: string[] }) {
               </motion.span>
             )}
           </span>
+          {stars !== null && (
+            <motion.span
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ type: "spring", stiffness: 400, damping: 10, delay: 0.2 }}
+              className="sm:hidden text-xs font-bold text-yellow-50 drop-shadow-[0_0_8px_rgba(255,255,255,0.4)]"
+            >
+              {stars}
+            </motion.span>
+          )}
         </span>
       </StarButton>
       <motion.div 
