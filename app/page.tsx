@@ -228,7 +228,7 @@ export default async function Home() {
         </div>
 
         <div className="absolute left-1/2 -translate-x-1/2">
-          <Link href="/docs" className="text-sm font-medium hover:text-[#856FE6] transition-colors">Docs</Link>
+          <Link href="/docs" className="text-sm font-medium hover:text-[#856FE6] transition-colors underline decoration-[#856FE6] underline-offset-4">Docs</Link>
         </div>
 
         <div className="flex items-center gap-4">

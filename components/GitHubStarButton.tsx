@@ -19,23 +19,33 @@ function GitHubIcon({ className }: { className?: string }) {
 }
 
 export function GitHubStarButton({ repos }: { repos?: string[] }) {
+  const [stars, setStars] = React.useState<number | null>(null);
+
+  React.useEffect(() => {
+    fetch("https://api.github.com/repos/Varnan-Tech/opendirectory")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.stargazers_count !== undefined) {
+          setStars(data.stargazers_count);
+        }
+      })
+      .catch(console.error);
+  }, []);
+
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     window.open("https://github.com/Varnan-Tech/opendirectory", "_blank", "noopener,noreferrer");
   };
 
   return (
-    <a href="https://github.com/Varnan-Tech/opendirectory" onClick={handleClick} target="_blank" rel="noopener noreferrer">
+    <a href="https://github.com/Varnan-Tech/opendirectory" onClick={handleClick} target="_blank" rel="noopener noreferrer" className="relative inline-block rounded-3xl overflow-hidden group">
       <StarButton
         lightColor="#856FE6"
         backgroundColor="black"
         borderWidth={1}
-        className="rounded-3xl h-8 px-3.5 cursor-pointer hover:bg-black/80 transition-colors group relative overflow-hidden"
+        className="rounded-3xl h-8 px-3.5 cursor-pointer hover:bg-black/80 transition-colors relative"
       >
-        <span 
-          className="flex items-center gap-1.5 relative z-10" 
-          style={{ WebkitTextFillColor: "initial", color: "white" }}
-        >
+        <span className="flex items-center gap-1.5 relative z-10 text-white">
           <GitHubIcon className="w-3.5 h-3.5 text-white" />
           <motion.div
             animate={{
@@ -51,14 +61,26 @@ export function GitHubStarButton({ repos }: { repos?: string[] }) {
           >
             <Star className="w-3.5 h-3.5 text-yellow-400 fill-yellow-400 drop-shadow-[0_0_5px_rgba(250,204,21,0.8)]" />
           </motion.div>
-          <span className="text-xs font-medium text-white group-hover:text-yellow-100 transition-colors">Star our repo</span>
+          <span className="text-xs font-medium text-white group-hover:text-yellow-100 transition-colors">
+            Star our repo{" "}
+            {stars !== null && (
+              <motion.span 
+                initial={{ opacity: 0, scale: 0.5, y: 5 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                transition={{ type: "spring", stiffness: 400, damping: 10, delay: 0.2 }}
+                className="ml-1 opacity-100 font-bold text-yellow-50 inline-block drop-shadow-[0_0_8px_rgba(255,255,255,0.4)]"
+              >
+                ({stars})
+              </motion.span>
+            )}
+          </span>
         </span>
-        <motion.div 
-          className="absolute inset-0 rounded-3xl bg-gradient-to-r from-transparent via-white/20 to-transparent w-[200%]" 
-          animate={{ x: ["-100%", "50%"] }}
-          transition={{ duration: 2.5, ease: "linear", repeat: Infinity }}
-        />
       </StarButton>
+      <motion.div 
+        className="absolute top-0 bottom-0 w-1/2 pointer-events-none z-[5] bg-gradient-to-r from-transparent via-white/30 to-transparent" 
+        animate={{ x: ["-100%", "300%"] }}
+        transition={{ duration: 2.5, ease: "linear", repeat: Infinity }}
+      />
     </a>
   );
 }
