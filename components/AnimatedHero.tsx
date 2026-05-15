@@ -4,8 +4,8 @@ import React from 'react';
 import { motion } from 'framer-motion';
 
 export function AnimatedHero() {
-  const text1 = "THE GTM SKILLS";
-  const text2 = "FOR YOUR AGENT.";
+  const text1 = "SKILLS FOR FOUNDERS";
+  const text2 = "WHO HATE MARKETING";
   
   const container = {
     hidden: { opacity: 1 },
