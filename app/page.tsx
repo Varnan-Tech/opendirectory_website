@@ -246,7 +246,7 @@ export default async function Home() {
                 <AnimatedHero />
 
                 <p className="text-base md:text-lg text-black/60 max-w-lg leading-relaxed text-balance font-normal">
-                  The unified home for open-source GTM agent skills and automation pipelines designed for autonomous agents.
+                  The unified home for open-source agent skills built for founders who hate marketing.
                 </p>
               </div>
               <InstallCommand />

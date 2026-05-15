@@ -23,9 +23,9 @@ const theaterFont = localFont({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://opendirectory.dev"),
-  title: "Open Directory | Open-source agent skills and MCP servers",
+  title: "opendirectory | Skills for Founders who hate Marketing",
   description:
-    "The unified home for open-source GTM agent skills, CLI utilities, and automation pipelines designed for autonomous agents like Claude Code, OpenCode, and Gemini.",
+    "The unified home for open-source agent skills designed for founders who hate marketing.",
   keywords: ["autonomous agents", "open source", "MCP servers", "Claude Code", "OpenCode", "developer tools", "skills"],
   icons: {
     icon: "/favicon.png",
@@ -33,16 +33,16 @@ export const metadata: Metadata = {
     apple: "/favicon.png",
   },
   openGraph: {
-    title: "Open Directory | Agent Skills",
-    description: "The unified home for open-source GTM agent skills and automation pipelines designed for autonomous agents.",
+    title: "opendirectory | Skills for Founders who hate Marketing",
+    description: "The unified home for open-source agent skills designed for founders who hate marketing.",
     url: "https://opendirectory.dev",
-    siteName: "Open Directory",
+    siteName: "opendirectory",
     images: [
       {
         url: "/og-image.webp",
         width: 1200,
         height: 630,
-        alt: "Open Directory | Agent Skills",
+        alt: "opendirectory | Skills for Founders",
       },
     ],
     locale: "en_US",
@@ -50,8 +50,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Open Directory | Agent Skills",
-    description: "The unified home for open-source GTM agent skills and automation pipelines designed for autonomous agents.",
+    title: "opendirectory | Skills for Founders who hate Marketing",
+    description: "The unified home for open-source agent skills designed for founders who hate marketing.",
     images: ["/og-image.webp"],
   },
   robots: {

@@ -13,7 +13,7 @@ export async function GET() {
     const skillsFolders = await res.json();
     
     let text = `# Open Directory - Agent Skills\n\n`;
-    text += `> Open Directory is the unified home for open-source agent skills, CLI utilities, and automation pipelines designed for autonomous agents like Claude Code, OpenCode, and Gemini.\n\n`;
+    text += `> Open Directory is the unified home for open-source agent skills built for founders who hate marketing.\n\n`;
     
     text += `## Available Skills\n\n`;
     
