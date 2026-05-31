@@ -14,9 +14,9 @@ const ReactMarkdown = dynamic(() => import("react-markdown"), {
   ssr: true,
   loading: () => <div className="w-full h-32 bg-black/5 animate-pulse rounded-xl"></div>
 });
-import { 
-  Code2, 
-  Globe, 
+import {
+  Code2,
+  Globe,
   Search,
   FileText,
   Zap,
@@ -28,8 +28,11 @@ import {
   X,
   GitPullRequest,
   Mail,
-  Package
+  Package,
+  Download,
+  Sparkles
 } from "lucide-react";
+import { InstallButton, DownloadButton, ManusButton } from "@/components/SkillActions";
 
 export interface GitHubRepo {
   name: string;
@@ -131,121 +134,6 @@ function CategoryTags({ name, description }: { name: string, description: string
   );
 }
 
-function InstallButton({ name }: { name: string }) {
-  const [isOpen, setIsOpen] = useState(false);
-  const [copied, setCopied] = useState(false);
-  const [selectedPlatform, setSelectedPlatform] = useState("opencode");
-
-  const platforms = [
-    { id: "opencode", name: "OpenCode", flag: "opencode" },
-    { id: "claude", name: "Claude Code", flag: "claude" },
-    { id: "openclaw", name: "OpenClaw", flag: "openclaw" },
-    { id: "hermes", name: "Hermes Agent", flag: "hermes" },
-    { id: "antigravity", name: "Anti-Gravity", flag: "antigravity" },
-    { id: "gemini", name: "Gemini CLI", flag: "gemini" },
-  ];
-
-  const getCommandText = (platform: string, repoName: string) => {
-    if (platform === "claude") {
-      return `/plugin install ${repoName}@opendirectory-marketplace`;
-    }
-    return `npx "@opendirectory.dev/skills" install ${repoName} --target ${platform}`;
-  };
-
-  const executeCopy = (e?: React.MouseEvent, flag?: string) => {
-    if (e) e.stopPropagation();
-    const targetFlag = flag || selectedPlatform;
-    const command = getCommandText(targetFlag, name);
-    navigator.clipboard.writeText(command);
-    toast.success(`Copied command for ${platforms.find(p => p.flag === targetFlag)?.name}!`);
-    setCopied(true);
-    setTimeout(() => {
-      setCopied(false);
-      setIsOpen(false);
-    }, 1500);
-  };
-
-  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const val = e.target.value;
-    setSelectedPlatform(val);
-    executeCopy(undefined, val);
-  };
-
-  return (
-    <>
-      <button 
-        onClick={(e) => { e.stopPropagation(); setIsOpen(true); }}
-        className="p-1.5 rounded-md bg-black/5 hover:bg-[#856FE6]/10 text-black/40 hover:text-[#856FE6] border border-black/5 hover:border-[#856FE6]/30 transition-all z-20 relative group/btn flex items-center justify-center shrink-0"
-        title="Copy install command"
-      >
-        <Copy className="w-3.5 h-3.5" />
-        <div className="absolute right-full mr-2 top-1/2 -translate-y-1/2 px-2 py-1 bg-black text-white text-[10px] rounded opacity-0 group-hover/btn:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
-          Install Skill
-        </div>
-      </button>
-
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={(e) => { e.stopPropagation(); setIsOpen(false); }}
-            className="fixed inset-0 z-[120] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm"
-          >
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 10 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 10 }}
-              onClick={(e) => e.stopPropagation()}
-              className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md flex flex-col relative overflow-hidden"
-            >
-              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#856FE6]/20 via-[#856FE6] to-[#856FE6]/20" />
-              
-              <div className="flex justify-between items-center mb-6">
-                <h3 className="text-xl font-bold text-black tracking-tight">Select Target Platform</h3>
-                <button onClick={() => setIsOpen(false)} className="p-1.5 hover:bg-black/5 rounded-full transition-colors">
-                  <X className="w-5 h-5 text-black/50" />
-                </button>
-              </div>
-              
-              <p className="text-[14px] text-black/70 leading-relaxed mb-6">
-                Choose your autonomous AI agent from the dropdown below. The installation command for <strong className="text-black font-mono font-medium">{name}</strong> will be automatically copied.
-              </p>
-
-              <div className="flex flex-col gap-4">
-                <div className="flex items-center gap-3">
-                  <select
-                    value={selectedPlatform}
-                    onChange={handleSelectChange}
-                    className="flex-1 bg-white border border-black/10 rounded-lg px-4 py-3 text-[14px] font-medium text-black focus:outline-none focus:ring-2 focus:ring-[#856FE6]/30 hover:border-black/20 transition-colors cursor-pointer appearance-none"
-                    style={{ backgroundImage: `url("/vectors/chevron-down.svg")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 1rem top 50%', backgroundSize: '0.65rem auto' }}
-                  >
-                    {platforms.map(p => (
-                      <option key={p.id} value={p.flag}>{p.name}</option>
-                    ))}
-                  </select>
-                  <button
-                    onClick={(e) => executeCopy(e)}
-                    className="flex items-center justify-center gap-2 px-5 py-3 bg-[#856FE6] hover:bg-[#856FE6]/90 text-white rounded-lg text-[14px] font-medium transition-colors shrink-0 shadow-sm"
-                  >
-                    {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-                    {copied ? "Copied!" : "Copy"}
-                  </button>
-                </div>
-                
-                <div className="bg-black text-white/90 p-4 rounded-lg font-mono text-[12px] overflow-hidden whitespace-nowrap overflow-ellipsis mt-2">
-                  {getCommandText(selectedPlatform, name)}
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </>
-  );
-}
-
 function StarIcon() {
   return (
     <img src="/vectors/star-icon.svg" alt="Star" className="w-3.5 h-3.5 opacity-40 group-hover:opacity-100 group-hover:invert-[.4] group-hover:sepia-[.8] group-hover:saturate-[4] group-hover:hue-rotate-[220deg] transition-all" />
@@ -264,6 +152,7 @@ export function BentoGrid({ repos, selectedRepo, onSelect, onClose }: BentoGridP
   const [copiedPrompt, setCopiedPrompt] = useState(false);
 
   const [modalTarget, setModalTarget] = useState("opencode");
+  const [installMethod, setInstallMethod] = useState<"cli" | "download" | "manus">("cli");
 
   useEffect(() => {
     if (!selectedRepo) {
@@ -366,7 +255,9 @@ export function BentoGrid({ repos, selectedRepo, onSelect, onClose }: BentoGridP
                         {item.description || "Open source agent skill pipeline and automation logic."}
                       </p>
                       
-                      <div className="flex md:hidden items-center justify-end w-full relative z-20 mt-3 pt-3 border-t border-black/[0.04]">
+                      <div className="flex md:hidden items-center justify-end w-full relative z-20 mt-3 pt-3 border-t border-black/[0.04] gap-2">
+                        <DownloadButton name={item.name} />
+                        <ManusButton name={item.name} />
                         <InstallButton name={item.name} />
                       </div>
                     </div>
@@ -387,7 +278,9 @@ export function BentoGrid({ repos, selectedRepo, onSelect, onClose }: BentoGridP
                         </>
                       ) : null}
                     </div>
-                    <div className="ml-auto">
+                    <div className="ml-auto flex items-center gap-2">
+                      <DownloadButton name={item.name} />
+                      <ManusButton name={item.name} />
                       <InstallButton name={item.name} />
                     </div>
                   </div>
@@ -436,42 +329,95 @@ export function BentoGrid({ repos, selectedRepo, onSelect, onClose }: BentoGridP
 
               <div className="flex-1 overflow-y-auto p-4 sm:p-6">
                 <div className="mb-8 p-4 bg-black/[0.02] border border-black/[0.08] rounded-xl">
-                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-3 gap-3">
-                    <h4 className="text-[13px] font-semibold text-black/70 uppercase tracking-wider">Install Command</h4>
-                    <div className="flex items-center gap-2 w-full sm:w-auto">
-                      <select
-                        value={modalTarget}
-                        onChange={(e) => setModalTarget(e.target.value)}
-                        className="text-[13px] font-medium bg-white border border-black/10 rounded-md px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-[#856FE6]/30 text-black/80 hover:bg-black/[0.02] transition-colors cursor-pointer w-full sm:w-auto"
-                      >
-                        <option value="opencode">OpenCode</option>
-                        <option value="claude">Claude Code</option>
-                        <option value="openclaw">OpenClaw</option>
-                        <option value="hermes">Hermes Agent</option>
-                        <option value="antigravity">Anti-Gravity</option>
-                        <option value="gemini">Gemini CLI</option>
-                      </select>
-                      <button
-                        onClick={(e) => handleCopyPrompt(e, selectedRepo.name, modalTarget)}
-                        className="flex items-center justify-center gap-1.5 px-3 py-1.5 text-[13px] font-medium text-black/60 hover:text-[#856FE6] hover:bg-[#856FE6]/10 rounded-md transition-colors shrink-0 border border-transparent hover:border-[#856FE6]/20"
-                      >
-                        {copiedPrompt ? <Check className="w-3.5 h-3.5 text-green-500" /> : <Copy className="w-3.5 h-3.5" />}
-                        {copiedPrompt ? "Copied!" : "Copy"}
-                      </button>
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-3">
+                    <h4 className="text-[13px] font-semibold text-black/70 uppercase tracking-wider">Install</h4>
+                    <div className="inline-flex items-center gap-1 p-1 bg-black/[0.04] border border-black/[0.06] rounded-lg">
+                      {[
+                        { id: "cli", label: "CLI Command", icon: <Copy className="w-3.5 h-3.5" /> },
+                        { id: "download", label: "Download", icon: <Download className="w-3.5 h-3.5" /> },
+                        { id: "manus", label: "Manus AI", icon: <Sparkles className="w-3.5 h-3.5" /> },
+                      ].map((tab) => {
+                        const active = installMethod === tab.id;
+                        return (
+                          <button
+                            key={tab.id}
+                            onClick={() => setInstallMethod(tab.id as "cli" | "download" | "manus")}
+                            className={
+                              "inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-[12px] font-medium transition-all " +
+                              (active
+                                ? "bg-white text-black shadow-sm border border-black/[0.06]"
+                                : "text-black/55 hover:text-black/80 border border-transparent")
+                            }
+                          >
+                            {tab.icon}
+                            {tab.label}
+                          </button>
+                        );
+                      })}
                     </div>
                   </div>
-                  <div className="bg-black text-white p-4 rounded-xl font-mono text-[13px] leading-relaxed overflow-x-auto shadow-inner select-all relative group/code whitespace-pre-wrap break-all">
-                    {modalTarget === "claude" ? `/plugin install ${selectedRepo.name}@opendirectory-marketplace` : `npx "@opendirectory.dev/skills" install ${selectedRepo.name} --target ${modalTarget}`}
-                    <div className="absolute top-2 right-2 opacity-0 group-hover/code:opacity-100 transition-opacity">
-                      <button
-                        onClick={(e) => handleCopyPrompt(e, selectedRepo.name, modalTarget)}
-                        className="p-1.5 rounded-md bg-white/10 hover:bg-white/20 text-white/60 hover:text-white transition-colors"
-                        title="Copy to clipboard"
-                      >
-                        {copiedPrompt ? <Check className="w-3.5 h-3.5 text-green-400" /> : <Copy className="w-3.5 h-3.5" />}
-                      </button>
+
+                  {installMethod === "cli" && (
+                    <div>
+                      <div className="flex items-center gap-2 mb-3">
+                        <select
+                          value={modalTarget}
+                          onChange={(e) => setModalTarget(e.target.value)}
+                          className="text-[13px] font-medium bg-white border border-black/10 rounded-md px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-[#856FE6]/30 text-black/80 hover:bg-black/[0.02] transition-colors cursor-pointer"
+                        >
+                          <option value="opencode">OpenCode</option>
+                          <option value="claude">Claude Code</option>
+                          <option value="openclaw">OpenClaw</option>
+                          <option value="hermes">Hermes Agent</option>
+                          <option value="antigravity">Anti-Gravity</option>
+                          <option value="gemini">Gemini CLI</option>
+                        </select>
+                        <button
+                          onClick={(e) => handleCopyPrompt(e, selectedRepo.name, modalTarget)}
+                          className="flex items-center justify-center gap-1.5 px-3 py-1.5 text-[13px] font-medium text-black/60 hover:text-[#856FE6] hover:bg-[#856FE6]/10 rounded-md transition-colors shrink-0 border border-transparent hover:border-[#856FE6]/20"
+                        >
+                          {copiedPrompt ? <Check className="w-3.5 h-3.5 text-green-500" /> : <Copy className="w-3.5 h-3.5" />}
+                          {copiedPrompt ? "Copied!" : "Copy"}
+                        </button>
+                      </div>
+                      <div className="bg-black text-white p-4 rounded-xl font-mono text-[13px] leading-relaxed overflow-x-auto shadow-inner select-all relative group/code whitespace-pre-wrap break-all">
+                        {modalTarget === "claude" ? `/plugin install ${selectedRepo.name}@opendirectory-marketplace` : `npx "@opendirectory.dev/skills" install ${selectedRepo.name} --target ${modalTarget}`}
+                      </div>
                     </div>
-                  </div>
+                  )}
+
+                  {installMethod === "download" && (
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                      <p className="text-[13px] text-black/60 leading-relaxed">
+                        Get this skill as a portable <code className="font-mono text-[12px] bg-black/[0.05] px-1.5 py-0.5 rounded">.skill.zip</code>. Drop it into Claude desktop, Manus, or any agent that accepts skill folders.
+                      </p>
+                      <a
+                        href={`/api/download/${encodeURIComponent(selectedRepo.name)}`}
+                        download
+                        className="inline-flex items-center gap-2 px-4 py-2 bg-black text-white rounded-lg text-[13px] font-medium hover:bg-black/80 transition-colors shrink-0 self-start sm:self-auto"
+                      >
+                        <Download className="w-4 h-4" />
+                        Download .skill.zip
+                      </a>
+                    </div>
+                  )}
+
+                  {installMethod === "manus" && (
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                      <p className="text-[13px] text-black/60 leading-relaxed">
+                        One-click import into your <strong className="text-black">Manus AI</strong> workspace. Opens manus.im and pulls the skill from GitHub.
+                      </p>
+                      <a
+                        href={`https://manus.im/import-skills?githubUrl=${encodeURIComponent(`https://github.com/Varnan-Tech/opendirectory/tree/main/skills/${selectedRepo.name}`)}&utm_source=opendirectory`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 px-4 py-2 bg-[#856FE6] hover:bg-[#856FE6]/90 text-white rounded-lg text-[13px] font-medium transition-colors shrink-0 self-start sm:self-auto"
+                      >
+                        <Sparkles className="w-4 h-4" />
+                        Open in Manus AI
+                      </a>
+                    </div>
+                  )}
                 </div>
 
                 <div className="prose prose-sm md:prose-base max-w-none">
