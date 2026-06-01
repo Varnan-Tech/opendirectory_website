@@ -179,9 +179,9 @@ export function FeaturedSkillsSection({ allRepos, onSelect }: FeaturedSkillsSect
                     {skill.name}
                   </span>
                   <div className="flex items-center gap-1.5 shrink-0">
+                    <InstallButton name={skill.name} />
                     <DownloadButton name={skill.name} />
                     <ManusButton name={skill.name} />
-                    <InstallButton name={skill.name} />
                   </div>
                 </div>
               </div>

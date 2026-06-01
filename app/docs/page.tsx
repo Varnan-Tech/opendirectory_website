@@ -4,6 +4,7 @@ import { AnimatedLogo } from "@/components/AnimatedLogo";
 import { DocsAnimation } from "@/components/DocsAnimation";
 import { ContributeAnimation } from "@/components/ContributeAnimation";
 import { Button } from "@/components/ui/neon-button";
+import { CopyableCodeBlock } from "@/components/CopyableCodeBlock";
 import Link from "next/link";
 
 export default function DocsPage() {
@@ -41,6 +42,16 @@ export default function DocsPage() {
               Our skills are designed to be consumed directly by autonomous AI agents (like Claude Code, OpenCode, Codex, or Gemini CLI). You don't need to be a software engineer to install these! 
             </p>
 
+            <div className="bg-black/[0.03] border border-black/10 rounded-xl p-6 mb-12">
+              <h3 className="text-lg font-semibold tracking-tight mb-3">Quick install from any skill page</h3>
+              <ol className="list-decimal pl-5 space-y-2 text-black/75 text-sm leading-relaxed mb-4">
+                <li>Open the skill you want from the homepage.</li>
+                <li>In the install panel, keep <strong>CLI Command</strong> selected and choose your target platform.</li>
+                <li>Click the copy icon, then paste the command into your terminal.</li>
+              </ol>
+              <CopyableCodeBlock code={'npx "@opendirectory.dev/skills" install [SKILL-NAME] --target opencode'} buttonLabel="Copy npx" />
+            </div>
+
             <h2 className="text-2xl font-semibold tracking-tight mt-12 mb-6 border-b border-black/10 pb-4">
               Native Installation (Claude Code Only)
             </h2>
@@ -52,15 +63,11 @@ export default function DocsPage() {
               <div className="space-y-4">
                 <div>
                   <h4 className="text-sm font-semibold text-black/70 mb-2">1. Add the Open Directory marketplace</h4>
-                  <div className="bg-black text-white p-4 rounded-lg font-mono text-sm shadow-inner">
-                    /plugin marketplace add Varnan-Tech/opendirectory
-                  </div>
+                  <CopyableCodeBlock code="/plugin marketplace add Varnan-Tech/opendirectory" buttonLabel="Copy command" />
                 </div>
                 <div>
                   <h4 className="text-sm font-semibold text-black/70 mb-2">2. Install a skill directly</h4>
-                  <div className="bg-black text-white p-4 rounded-lg font-mono text-sm shadow-inner">
-                    /plugin install [SKILL-NAME]@opendirectory-marketplace
-                  </div>
+                  <CopyableCodeBlock code="/plugin install [SKILL-NAME]@opendirectory-marketplace" buttonLabel="Copy command" />
                 </div>
               </div>
             </div>
@@ -111,6 +118,42 @@ export default function DocsPage() {
                   </div>
                 </div>
               </div>
+            </div>
+
+            <h2 className="text-2xl font-semibold tracking-tight mt-12 mb-6 border-b border-black/10 pb-4">
+              Manus AI Installation
+            </h2>
+            <div className="bg-[#856FE6]/5 border border-[#856FE6]/20 rounded-xl p-8 mb-12">
+              <p className="text-black/80 leading-relaxed mb-6">
+                Manus AI users can import a skill directly from its Open Directory skill page. This is the easiest path when you want Manus to pull the skill from GitHub for you.
+              </p>
+
+              <div className="mb-8">
+                <video 
+                  src="/ManusAI-one-click-installation-demo.webm" 
+                  controls 
+                  playsInline
+                  autoPlay
+                  loop
+                  muted
+                  preload="metadata"
+                  className="max-w-full w-full rounded-lg shadow-sm border border-black/10 block bg-black"
+                >
+                  <source src="/ManusAI-one-click-installation-demo.webm" type="video/webm" />
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+
+              <ol className="list-decimal pl-5 space-y-2 text-black/80 mb-6">
+                <li>Open the skill you want from the homepage.</li>
+                <li>In the install panel, select the <strong>Manus AI</strong> tab.</li>
+                <li>Click <strong>Install in Manus AI</strong>. This opens Manus with the skill GitHub URL already attached.</li>
+                <li>Confirm the import inside Manus AI.</li>
+              </ol>
+
+              <p className="text-sm text-black/60 leading-relaxed">
+                If your Manus workspace prefers file uploads, use the <strong>Download</strong> tab instead and upload the downloaded <code>.skill.zip</code> file inside Manus.
+              </p>
             </div>
 
             <h2 className="text-2xl font-semibold tracking-tight mt-12 mb-6 border-b border-black/10 pb-4">
@@ -174,9 +217,7 @@ export default function DocsPage() {
                   </p>
                   <div className="bg-black/5 border border-black/10 rounded-xl p-6">
                     <p className="text-sm font-medium mb-3 text-black/60">The copied command will look like this:</p>
-                    <div className="bg-black text-white p-4 rounded-lg font-mono text-sm overflow-x-auto shadow-inner">
-                      npx "@opendirectory.dev/skills" install [SKILL-NAME] --target claude
-                    </div>
+                    <CopyableCodeBlock code={'npx "@opendirectory.dev/skills" install [SKILL-NAME] --target opencode'} buttonLabel="Copy npx" />
                   </div>
                 </div>
               </div>
@@ -318,3 +359,6 @@ export default function DocsPage() {
     </main>
   );
 }
+
+
+
