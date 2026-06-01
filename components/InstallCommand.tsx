@@ -14,7 +14,7 @@ export function InstallCommand() {
   };
 
   return (
-    <div className="relative mt-4 w-full max-w-md group">
+    <div className="relative mt-4 w-full max-w-lg group">
       <div className="absolute -inset-[1px] bg-gradient-to-r from-[#856FE6]/50 to-[#5B42F3]/50 rounded-xl blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
       
       <div className="relative w-full bg-[#0f172a] rounded-xl p-3 pl-4 font-mono text-[13px] text-white flex items-center justify-between border border-white/10 shadow-2xl overflow-hidden">
