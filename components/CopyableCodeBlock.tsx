@@ -33,10 +33,10 @@ export function CopyableCodeBlock({
   buttonLabel = "Copy",
 }: CopyableCodeBlockProps) {
   const [copied, setCopied] = useState(false);
-  const textToCopy = useMemo(() => (code ?? getNodeText(children)).trim(), [children, code]);
+  const textToCopy = useMemo(() => code ?? getNodeText(children), [children, code]);
 
   const copyToClipboard = () => {
-    if (!textToCopy) return;
+    if (!textToCopy?.trim()) return;
 
     void navigator.clipboard.writeText(textToCopy).then(() => {
       setCopied(true);
@@ -53,7 +53,7 @@ export function CopyableCodeBlock({
         type="button"
         onClick={copyToClipboard}
         className="absolute right-2 top-2 inline-flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-white/10 text-white/75 backdrop-blur transition-all hover:bg-white/15 hover:text-white active:scale-95"
-        aria-label={`${buttonLabel}: ${textToCopy}`}
+        aria-label={buttonLabel}
         title={buttonLabel}
       >
         {copied ? <Check className="h-3.5 w-3.5 text-green-300" /> : <Copy className="h-3.5 w-3.5" />}

@@ -32,6 +32,7 @@ import {
 } from "lucide-react";
 import { Manus } from "@lobehub/icons";
 import { CopyableCodeBlock } from "@/components/CopyableCodeBlock";
+import { getInstallCommand, PLATFORMS } from "@/lib/install-utils";
 import { InstallButton, DownloadButton, ManusButton } from "@/components/SkillActions";
 
 export interface GitHubRepo {
@@ -369,12 +370,9 @@ export function BentoGrid({ repos, selectedRepo, onSelect, onClose }: BentoGridP
                           onChange={(e) => setModalTarget(e.target.value)}
                           className="text-[13px] font-medium bg-white border border-black/10 rounded-md px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-[#856FE6]/30 text-black/80 hover:bg-black/[0.02] transition-colors cursor-pointer"
                         >
-                          <option value="opencode">OpenCode</option>
-                          <option value="claude">Claude Code</option>
-                          <option value="openclaw">OpenClaw</option>
-                          <option value="hermes">Hermes Agent</option>
-                          <option value="antigravity">Anti-Gravity</option>
-                          <option value="gemini">Gemini CLI</option>
+                          {PLATFORMS.map((p) => (
+                            <option key={p.id} value={p.flag}>{p.name}</option>
+                          ))}
                         </select>
                         <button
                           onClick={(e) => handleCopyPrompt(e, selectedRepo.name, modalTarget)}
@@ -522,7 +520,7 @@ export function BentoGrid({ repos, selectedRepo, onSelect, onClose }: BentoGridP
                             }
                             return <source src={finalSrc} {...props} />;
                           },
-                          pre: ({ children }) => {
+                          pre: ({ children }: any) => {
                             return (
                               <CopyableCodeBlock buttonLabel="Copy code">
                                 {children}
@@ -545,10 +543,4 @@ export function BentoGrid({ repos, selectedRepo, onSelect, onClose }: BentoGridP
   );
 }
 
-function getInstallCommand(repoName: string, target: string) {
-  if (target === "claude") {
-    return `/plugin install ${repoName}@opendirectory-marketplace`;
-  }
 
-  return `npx "@opendirectory.dev/skills" install ${repoName} --target ${target}`;
-}

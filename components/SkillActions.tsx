@@ -5,29 +5,13 @@ import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 import { Copy, Check, X, Download } from "lucide-react";
 import { Manus } from "@lobehub/icons";
-
-const PLATFORMS = [
-  { id: "opencode", name: "OpenCode", flag: "opencode" },
-  { id: "claude", name: "Claude Code", flag: "claude" },
-  { id: "openclaw", name: "OpenClaw", flag: "openclaw" },
-  { id: "hermes", name: "Hermes Agent", flag: "hermes" },
-  { id: "antigravity", name: "Anti-Gravity", flag: "antigravity" },
-  { id: "gemini", name: "Gemini CLI", flag: "gemini" },
-];
-
-function getCommandText(platform: string, repoName: string) {
-  if (platform === "claude") {
-    return `/plugin install ${repoName}@opendirectory-marketplace`;
-  }
-
-  return `npx "@opendirectory.dev/skills" install ${repoName} --target ${platform}`;
-}
+import { PLATFORMS, getInstallCommand } from "@/lib/install-utils";
 
 export function InstallButton({ name }: { name: string }) {
   const [isOpen, setIsOpen] = useState(false);
   const [copied, setCopied] = useState(false);
   const [selectedPlatform, setSelectedPlatform] = useState("opencode");
-  const command = getCommandText(selectedPlatform, name);
+  const command = getInstallCommand(selectedPlatform, name);
 
   useEffect(() => {
     document.body.classList.toggle("install-modal-open", isOpen);
@@ -41,7 +25,8 @@ export function InstallButton({ name }: { name: string }) {
     e?.stopPropagation();
 
     void navigator.clipboard.writeText(command).then(() => {
-      toast.success(`Copied command for ${PLATFORMS.find((p) => p.flag === selectedPlatform)?.name}!`);
+      const platformName = PLATFORMS.find((p) => p.flag === selectedPlatform)?.name ?? "Unknown";
+      toast.success(`Copied command for ${platformName}!`);
       setCopied(true);
       window.setTimeout(() => setCopied(false), 1800);
     });
@@ -118,7 +103,7 @@ export function InstallButton({ name }: { name: string }) {
                   type="button"
                   onClick={executeCopy}
                   className="group/code relative mt-2 overflow-hidden rounded-lg bg-black p-4 pr-14 text-left font-mono text-[12px] text-white/90 shadow-inner transition-colors hover:bg-black/90"
-                  aria-label={`Copy install command: ${command}`}
+                  aria-label="Copy install command"
                 >
                   <span className="block whitespace-pre-wrap break-all">{command}</span>
                   <span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/45 transition-colors group-hover/code:text-white">
