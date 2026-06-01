@@ -1,7 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
-import { createPortal } from "react-dom";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 import dynamic from "next/dynamic";
@@ -30,8 +29,10 @@ import {
   Mail,
   Package,
   Download,
-  Sparkles
 } from "lucide-react";
+import { Manus } from "@lobehub/icons";
+import { CopyableCodeBlock } from "@/components/CopyableCodeBlock";
+import { getInstallCommand, PLATFORMS } from "@/lib/install-utils";
 import { InstallButton, DownloadButton, ManusButton } from "@/components/SkillActions";
 
 export interface GitHubRepo {
@@ -155,6 +156,14 @@ export function BentoGrid({ repos, selectedRepo, onSelect, onClose }: BentoGridP
   const [installMethod, setInstallMethod] = useState<"cli" | "download" | "manus">("cli");
 
   useEffect(() => {
+    document.body.classList.toggle("skill-detail-modal-open", Boolean(selectedRepo));
+
+    return () => {
+      document.body.classList.remove("skill-detail-modal-open");
+    };
+  }, [selectedRepo]);
+
+  useEffect(() => {
     if (!selectedRepo) {
       setReadme("");
       return;
@@ -186,10 +195,7 @@ export function BentoGrid({ repos, selectedRepo, onSelect, onClose }: BentoGridP
 
   const handleCopyPrompt = (e: React.MouseEvent, repoName: string, target: string = "opencode") => {
     e.stopPropagation();
-    let command = `npx "@opendirectory.dev/skills" install ${repoName} --target ${target}`;
-    if (target === "claude") {
-      command = `/plugin install ${repoName}@opendirectory-marketplace`;
-    }
+    const command = getInstallCommand(repoName, target);
     navigator.clipboard.writeText(command);
     toast.success("Copied install command to clipboard!");
     setCopiedPrompt(true);
@@ -208,7 +214,6 @@ export function BentoGrid({ repos, selectedRepo, onSelect, onClose }: BentoGridP
         
         <div className="flex flex-col gap-2 w-full">
           {repos && repos.map((item, i) => {
-            const p = genRandomPattern(item.name, 3);
             return (
             <motion.div 
               key={i}
@@ -256,9 +261,9 @@ export function BentoGrid({ repos, selectedRepo, onSelect, onClose }: BentoGridP
                       </p>
                       
                       <div className="flex md:hidden items-center justify-end w-full relative z-20 mt-3 pt-3 border-t border-black/[0.04] gap-2">
+                        <InstallButton name={item.name} />
                         <DownloadButton name={item.name} />
                         <ManusButton name={item.name} />
-                        <InstallButton name={item.name} />
                       </div>
                     </div>
                   </div>
@@ -279,9 +284,9 @@ export function BentoGrid({ repos, selectedRepo, onSelect, onClose }: BentoGridP
                       ) : null}
                     </div>
                     <div className="ml-auto flex items-center gap-2">
+                      <InstallButton name={item.name} />
                       <DownloadButton name={item.name} />
                       <ManusButton name={item.name} />
-                      <InstallButton name={item.name} />
                     </div>
                   </div>
                 </div>
@@ -335,7 +340,7 @@ export function BentoGrid({ repos, selectedRepo, onSelect, onClose }: BentoGridP
                       {[
                         { id: "cli", label: "CLI Command", icon: <Copy className="w-3.5 h-3.5" /> },
                         { id: "download", label: "Download", icon: <Download className="w-3.5 h-3.5" /> },
-                        { id: "manus", label: "Manus AI", icon: <Sparkles className="w-3.5 h-3.5" /> },
+                        { id: "manus", label: "Manus AI", icon: <Manus size={14} /> },
                       ].map((tab) => {
                         const active = installMethod === tab.id;
                         return (
@@ -365,24 +370,20 @@ export function BentoGrid({ repos, selectedRepo, onSelect, onClose }: BentoGridP
                           onChange={(e) => setModalTarget(e.target.value)}
                           className="text-[13px] font-medium bg-white border border-black/10 rounded-md px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-[#856FE6]/30 text-black/80 hover:bg-black/[0.02] transition-colors cursor-pointer"
                         >
-                          <option value="opencode">OpenCode</option>
-                          <option value="claude">Claude Code</option>
-                          <option value="openclaw">OpenClaw</option>
-                          <option value="hermes">Hermes Agent</option>
-                          <option value="antigravity">Anti-Gravity</option>
-                          <option value="gemini">Gemini CLI</option>
+                          {PLATFORMS.map((p) => (
+                            <option key={p.id} value={p.flag}>{p.name}</option>
+                          ))}
                         </select>
                         <button
                           onClick={(e) => handleCopyPrompt(e, selectedRepo.name, modalTarget)}
-                          className="flex items-center justify-center gap-1.5 px-3 py-1.5 text-[13px] font-medium text-black/60 hover:text-[#856FE6] hover:bg-[#856FE6]/10 rounded-md transition-colors shrink-0 border border-transparent hover:border-[#856FE6]/20"
+                          className="flex h-9 w-9 items-center justify-center text-black/60 hover:text-[#856FE6] hover:bg-[#856FE6]/10 rounded-md transition-colors shrink-0 border border-transparent hover:border-[#856FE6]/20"
+                          title="Copy command"
+                          aria-label="Copy install command"
                         >
                           {copiedPrompt ? <Check className="w-3.5 h-3.5 text-green-500" /> : <Copy className="w-3.5 h-3.5" />}
-                          {copiedPrompt ? "Copied!" : "Copy"}
                         </button>
                       </div>
-                      <div className="bg-black text-white p-4 rounded-xl font-mono text-[13px] leading-relaxed overflow-x-auto shadow-inner select-all relative group/code whitespace-pre-wrap break-all">
-                        {modalTarget === "claude" ? `/plugin install ${selectedRepo.name}@opendirectory-marketplace` : `npx "@opendirectory.dev/skills" install ${selectedRepo.name} --target ${modalTarget}`}
-                      </div>
+                      <CopyableCodeBlock code={getInstallCommand(selectedRepo.name, modalTarget)} buttonLabel="Copy command" />
                     </div>
                   )}
 
@@ -413,8 +414,8 @@ export function BentoGrid({ repos, selectedRepo, onSelect, onClose }: BentoGridP
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-2 px-4 py-2 bg-[#856FE6] hover:bg-[#856FE6]/90 text-white rounded-lg text-[13px] font-medium transition-colors shrink-0 self-start sm:self-auto"
                       >
-                        <Sparkles className="w-4 h-4" />
-                        Open in Manus AI
+                        <Manus size={16} />
+                        Install in Manus AI
                       </a>
                     </div>
                   )}
@@ -518,6 +519,13 @@ export function BentoGrid({ repos, selectedRepo, onSelect, onClose }: BentoGridP
                               finalSrc = `https://raw.githubusercontent.com/Varnan-Tech/opendirectory/main/skills/${selectedRepo.name}/${cleanSrc}`;
                             }
                             return <source src={finalSrc} {...props} />;
+                          },
+                          pre: ({ children }: any) => {
+                            return (
+                              <CopyableCodeBlock buttonLabel="Copy code">
+                                {children}
+                              </CopyableCodeBlock>
+                            );
                           }
                         }}
                       >
@@ -535,44 +543,4 @@ export function BentoGrid({ repos, selectedRepo, onSelect, onClose }: BentoGridP
   );
 }
 
-function GridPattern({
-  width,
-  height,
-  x,
-  y,
-  squares,
-  ...props
-}: React.ComponentProps<"svg"> & { width: number; height: number; x: string; y: string; squares?: number[][] }) {
-  const patternId = React.useId();
 
-  return (
-    <svg aria-hidden="true" {...props}>
-      <defs>
-        <pattern id={patternId} width={width} height={height} patternUnits="userSpaceOnUse" x={x} y={y}>
-          <path d={`M.5 ${height}V.5H${width}`} fill="none" />
-        </pattern>
-      </defs>
-      <rect width="100%" height="100%" strokeWidth={0} fill={`url(#${patternId})`} />
-      {squares && (
-        <svg x={x} y={y} className="overflow-visible">
-          {squares.map(([x, y], index) => (
-            <rect strokeWidth="0" key={index} width={width + 1} height={height + 1} x={x * width} y={y * height} />
-          ))}
-        </svg>
-      )}
-    </svg>
-  );
-}
-
-function genRandomPattern(seedStr: string, length?: number): number[][] {
-  length = length ?? 5;
-  let hash = 0;
-  for (let i = 0; i < seedStr.length; i++) {
-    hash = Math.imul(31, hash) + seedStr.charCodeAt(i) | 0;
-  }
-  
-  return Array.from({ length }, (_, i) => [
-    Math.abs((hash ^ (i * 137)) % 4) + 7,
-    Math.abs((hash ^ (i * 251)) % 6) + 1,
-  ]);
-}
