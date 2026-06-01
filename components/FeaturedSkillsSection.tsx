@@ -1,14 +1,14 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { motion } from "framer-motion";
 import {
-  Star, Copy, Check, Code2, Globe, Search, FileText,
+  Star, Code2, Globe, Search, FileText,
   Zap, Bot, Layers, TerminalSquare, GitPullRequest, Mail, Package,
 } from "lucide-react";
-import { toast } from "sonner";
 import type { GitHubRepo } from "./BentoGrid";
 import { InfiniteSlider } from "./ui/infinite-slider";
+import { InstallButton, DownloadButton, ManusButton } from "@/components/SkillActions";
 
 // ─── Config ────────────────────────────────────────────────────────────────
 // Add or remove skill slugs here. Order is preserved in the UI.
@@ -78,34 +78,6 @@ function SkillIcon({ name }: { name: string }) {
     return <Zap className="w-4 h-4 text-[#856FE6]" />;
   if (n.includes("cli")) return <TerminalSquare className="w-4 h-4 text-[#856FE6]" />;
   return <Code2 className="w-4 h-4 text-[#856FE6]" />;
-}
-
-function InstallButton({ name }: { name: string }) {
-  const [copied, setCopied] = useState(false);
-
-  const handleCopy = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    const cmd = `npx "@opendirectory.dev/skills" install ${name} --target opencode`;
-    navigator.clipboard.writeText(cmd);
-    toast.success(`Copied install command!`);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  return (
-    <motion.button
-      onClick={handleCopy}
-      whileTap={{ scale: 0.94 }}
-      className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#856FE6]/10 hover:bg-[#856FE6]/20 text-[#856FE6] text-[11px] font-semibold transition-all border border-[#856FE6]/20 hover:border-[#856FE6]/40 shrink-0"
-    >
-      {copied ? (
-        <Check className="w-3 h-3" />
-      ) : (
-        <Copy className="w-3 h-3" />
-      )}
-      {copied ? "Copied!" : "Install"}
-    </motion.button>
-  );
 }
 
 const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
@@ -206,7 +178,11 @@ export function FeaturedSkillsSection({ allRepos, onSelect }: FeaturedSkillsSect
                   <span className="font-mono text-[10.5px] text-black/28 truncate mr-2">
                     {skill.name}
                   </span>
-                  <InstallButton name={skill.name} />
+                  <div className="flex items-center gap-1.5 shrink-0">
+                    <DownloadButton name={skill.name} />
+                    <ManusButton name={skill.name} />
+                    <InstallButton name={skill.name} />
+                  </div>
                 </div>
               </div>
             </motion.div>

@@ -23,7 +23,7 @@ const theaterFont = localFont({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://opendirectory.dev"),
-  title: "opendirectory | Skills for Founders who hate Marketing",
+  title: "opendirectory | Skills for Founders who hate marketing",
   description:
     "The unified home for open-source agent skills designed for founders who hate marketing.",
   keywords: ["autonomous agents", "open source", "MCP servers", "Claude Code", "OpenCode", "developer tools", "skills"],
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     apple: "/favicon.png",
   },
   openGraph: {
-    title: "opendirectory | Skills for Founders who hate Marketing",
+    title: "opendirectory | Skills for Founders who hate marketing",
     description: "The unified home for open-source agent skills designed for founders who hate marketing.",
     url: "https://opendirectory.dev",
     siteName: "opendirectory",
@@ -50,7 +50,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "opendirectory | Skills for Founders who hate Marketing",
+    title: "opendirectory | Skills for Founders who hate marketing",
     description: "The unified home for open-source agent skills designed for founders who hate marketing.",
     images: ["/og-image.webp"],
   },
