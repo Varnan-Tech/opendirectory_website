@@ -11,7 +11,7 @@ export function InstallButton({ name }: { name: string }) {
   const [isOpen, setIsOpen] = useState(false);
   const [copied, setCopied] = useState(false);
   const [selectedPlatform, setSelectedPlatform] = useState("opencode");
-  const command = getInstallCommand(selectedPlatform, name);
+  const command = getInstallCommand(name, selectedPlatform);
 
   useEffect(() => {
     document.body.classList.toggle("install-modal-open", isOpen);
