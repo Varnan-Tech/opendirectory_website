@@ -1,4 +1,5 @@
 export const PLATFORMS = [
+  { id: "skillssh", name: "skills.sh", flag: "skills.sh" },
   { id: "opencode", name: "OpenCode", flag: "opencode" },
   { id: "claude", name: "Claude Code", flag: "claude" },
   { id: "openclaw", name: "OpenClaw", flag: "openclaw" },
@@ -7,10 +8,12 @@ export const PLATFORMS = [
   { id: "gemini", name: "Gemini CLI", flag: "gemini" },
 ] as const;
 
-export function getInstallCommand(repoName: string, target: string) {
+export function getInstallCommand(skillName: string, target: string) {
   if (target === "claude") {
-    return `/plugin install ${repoName}@opendirectory-marketplace`;
+    return `/plugin install ${skillName}@opendirectory-marketplace`;
   }
-
-  return `npx "@opendirectory.dev/skills" install ${repoName} --target ${target}`;
+  if (target === "skills.sh") {
+    return `npx skills add Varnan-Tech/opendirectory --skill ${skillName}`;
+  }
+  return `npx "@opendirectory.dev/skills" install ${skillName} --target ${target}`;
 }
