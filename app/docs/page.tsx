@@ -53,6 +53,34 @@ export default function DocsPage() {
             </div>
 
             <h2 className="text-2xl font-semibold tracking-tight mt-12 mb-6 border-b border-black/10 pb-4">
+              skills.sh Installation
+            </h2>
+            <div className="bg-[#856FE6]/5 border border-[#856FE6]/20 rounded-xl p-8 mb-12">
+              <p className="text-black/80 leading-relaxed mb-6">
+                OpenDirectory is listed on <a href="https://www.skills.sh/Varnan-Tech/opendirectory" target="_blank" rel="noopener noreferrer" className="text-[#856FE6] hover:underline font-medium">skills.sh</a> — the open agent skills discovery platform by Vercel Labs. Install any skill with the <code>npx skills add</code> command, which auto-detects your installed coding agent (Claude Code, Codex, Gemini CLI, OpenCode, and more).
+              </p>
+
+              <div className="space-y-4">
+                <div>
+                  <h4 className="text-sm font-semibold text-black/70 mb-2">Install a single skill</h4>
+                  <CopyableCodeBlock code="npx skills add Varnan-Tech/opendirectory --skill [SKILL-NAME]" buttonLabel="Copy command" />
+                </div>
+                <div>
+                  <h4 className="text-sm font-semibold text-black/70 mb-2">Install all OpenDirectory skills</h4>
+                  <CopyableCodeBlock code="npx skills add Varnan-Tech/opendirectory" buttonLabel="Copy command" />
+                </div>
+                <div>
+                  <h4 className="text-sm font-semibold text-black/70 mb-2">Install globally (available in all projects)</h4>
+                  <CopyableCodeBlock code="npx skills add Varnan-Tech/opendirectory --global" buttonLabel="Copy command" />
+                </div>
+              </div>
+
+              <p className="text-sm text-black/60 leading-relaxed mt-6">
+                skills.sh auto-detects which agents you have installed. No <code>--target</code> flag needed. Skills land in <code>.claude/skills/</code> for Claude Code (or <code>~/.claude/skills/</code> with <code>--global</code>).
+              </p>
+            </div>
+
+            <h2 className="text-2xl font-semibold tracking-tight mt-12 mb-6 border-b border-black/10 pb-4">
               Native Installation (Claude Code Only)
             </h2>
             <div className="bg-[#856FE6]/5 border border-[#856FE6]/20 rounded-xl p-8 mb-12">
@@ -153,34 +181,6 @@ export default function DocsPage() {
 
               <p className="text-sm text-black/60 leading-relaxed">
                 If your Manus workspace prefers file uploads, use the <strong>Download</strong> tab instead and upload the downloaded <code>.skill.zip</code> file inside Manus.
-              </p>
-            </div>
-
-            <h2 className="text-2xl font-semibold tracking-tight mt-12 mb-6 border-b border-black/10 pb-4">
-              skills.sh Installation
-            </h2>
-            <div className="bg-[#856FE6]/5 border border-[#856FE6]/20 rounded-xl p-8 mb-12">
-              <p className="text-black/80 leading-relaxed mb-6">
-                OpenDirectory is listed on <a href="https://www.skills.sh/Varnan-Tech/opendirectory" target="_blank" rel="noopener noreferrer" className="text-[#856FE6] hover:underline font-medium">skills.sh</a> — the open agent skills discovery platform by Vercel Labs. Install any skill with the <code>npx skills add</code> command, which auto-detects your installed coding agent (Claude Code, Codex, Gemini CLI, OpenCode, and more).
-              </p>
-
-              <div className="space-y-4">
-                <div>
-                  <h4 className="text-sm font-semibold text-black/70 mb-2">Install a single skill</h4>
-                  <CopyableCodeBlock code="npx skills add Varnan-Tech/opendirectory --skill [SKILL-NAME]" buttonLabel="Copy command" />
-                </div>
-                <div>
-                  <h4 className="text-sm font-semibold text-black/70 mb-2">Install all OpenDirectory skills</h4>
-                  <CopyableCodeBlock code="npx skills add Varnan-Tech/opendirectory" buttonLabel="Copy command" />
-                </div>
-                <div>
-                  <h4 className="text-sm font-semibold text-black/70 mb-2">Install globally (available in all projects)</h4>
-                  <CopyableCodeBlock code="npx skills add Varnan-Tech/opendirectory --global" buttonLabel="Copy command" />
-                </div>
-              </div>
-
-              <p className="text-sm text-black/60 leading-relaxed mt-6">
-                skills.sh auto-detects which agents you have installed. No <code>--target</code> flag needed. Skills land in <code>.claude/skills/</code> for Claude Code (or <code>~/.claude/skills/</code> with <code>--global</code>).
               </p>
             </div>
 
