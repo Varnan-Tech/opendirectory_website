@@ -295,7 +295,67 @@ export default async function Home() {
 const logos = [
   {
     alt: "OpenClaw Logo",
-    src: "https://raw.githubusercontent.com/openclaw/openclaw/refs/heads/main/docs/assets/openclaw-logo-text-dark.png",
+    component: (
+      <div className="flex items-center gap-2 select-none h-6 md:h-8 scale-[1.3] md:scale-[1.35] origin-center shrink-0 mx-6 md:mx-10">
+        <svg
+          viewBox="0 -12 120 132"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          className="h-6 md:h-8 w-6 md:w-8 select-none shrink-0 overflow-visible"
+          style={{ overflow: 'visible' }}
+        >
+          <defs>
+            <linearGradient id="lobster-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#ff4d4d"/>
+              <stop offset="100%" stopColor="#991b1b"/>
+            </linearGradient>
+          </defs>
+          <g>
+            {/* Body */}
+            <path d="M60 10 C30 10 15 35 15 55 C15 75 30 95 45 100 L45 110 L55 110 L55 100 C55 100 60 102 65 100 L65 110 L75 110 L75 100 C90 95 105 75 105 55 C105 35 90 10 60 10Z" fill="url(#lobster-gradient)"/>
+            {/* Left Claw (hinges on its body-facing edge) */}
+            <path d="M20 45 C5 40 0 50 5 60 C10 70 20 65 25 55 C28 48 25 45 20 45Z" fill="url(#lobster-gradient)">
+              <animateTransform attributeName="transform" type="rotate"
+                values="0 26 53; 0 26 53; -8 26 53; 0 26 53; 0 26 53" keyTimes="0; 0.85; 0.9; 0.95; 1"
+                dur="4s" repeatCount="indefinite"
+                calcMode="spline" keySplines="0.42 0 0.58 1; 0.42 0 0.58 1; 0.42 0 0.58 1; 0.42 0 0.58 1"/>
+            </path>
+            {/* Right Claw (snaps 0.2s after the left) */}
+            <path d="M100 45 C115 40 120 50 115 60 C110 70 100 65 95 55 C92 48 95 45 100 45Z" fill="url(#lobster-gradient)">
+              <animateTransform attributeName="transform" type="rotate"
+                values="0 94 53; 0 94 53; -8 94 53; 0 94 53; 0 94 53" keyTimes="0; 0.85; 0.9; 0.95; 1"
+                dur="4s" begin="0.2s" repeatCount="indefinite"
+                calcMode="spline" keySplines="0.42 0 0.58 1; 0.42 0 0.58 1; 0.42 0 0.58 1; 0.42 0 0.58 1"/>
+            </path>
+            {/* Antenna */}
+            <path d="M45 15 Q35 5 30 8" stroke="#ff4d4d" strokeWidth="3" strokeLinecap="round">
+              <animateTransform attributeName="transform" type="rotate"
+                values="0 37.5 11; -3 37.5 11; 3 37.5 11; 0 37.5 11" keyTimes="0; 0.25; 0.75; 1"
+                dur="2s" repeatCount="indefinite"
+                calcMode="spline" keySplines="0.42 0 0.58 1; 0.42 0 0.58 1; 0.42 0 0.58 1"/>
+            </path>
+            <path d="M75 15 Q85 5 90 8" stroke="#ff4d4d" strokeWidth="3" strokeLinecap="round">
+              <animateTransform attributeName="transform" type="rotate"
+                values="0 82.5 11; -3 82.5 11; 3 82.5 11; 0 82.5 11" keyTimes="0; 0.25; 0.75; 1"
+                dur="2s" repeatCount="indefinite"
+                calcMode="spline" keySplines="0.42 0 0.58 1; 0.42 0 0.58 1; 0.42 0 0.58 1"/>
+            </path>
+            {/* Eyes */}
+            <circle cx="45" cy="35" r="6" fill="#050810"/>
+            <circle cx="75" cy="35" r="6" fill="#050810"/>
+            <circle cx="46" cy="34" r="2.5" fill="#00e5cc">
+              <animate attributeName="opacity" values="1; 1; 0.3; 1" keyTimes="0; 0.9; 0.95; 1" dur="3s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="76" cy="34" r="2.5" fill="#00e5cc">
+              <animate attributeName="opacity" values="1; 1; 0.3; 1" keyTimes="0; 0.9; 0.95; 1" dur="3s" repeatCount="indefinite"/>
+            </circle>
+          </g>
+        </svg>
+        <span className="font-bold text-[15px] md:text-[20px] text-black tracking-tighter leading-none shrink-0">
+          OpenClaw
+        </span>
+      </div>
+    ),
   },
   {
     alt: "Hermes Agent Logo",
