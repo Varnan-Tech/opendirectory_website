@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import { createDualmarkRouteHandler } from "@dualmark/nextjs";
 
-const ALLOWED_PATHS = new Set(["/", "/docs", "/privacy", "/terms"]);
+const ALLOWED_PATHS = new Set(["/index", "/docs", "/privacy", "/terms"]);
 
 const siteUrl = "https://opendirectory.dev";
 
@@ -154,7 +154,7 @@ export async function GET(
     return new Response("Not found", { status: 404 });
   }
 
-  return handler.GET(request, { params });
+  return handler.GET(request, { params: Promise.resolve(resolvedParams) });
 }
 
 export const generateStaticParams = handler.generateStaticParams;
