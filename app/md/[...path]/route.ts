@@ -1,0 +1,160 @@
+import { NextRequest } from "next/server";
+import { createDualmarkRouteHandler } from "@dualmark/nextjs";
+
+const ALLOWED_PATHS = new Set(["/", "/docs", "/privacy", "/terms"]);
+
+const siteUrl = "https://opendirectory.dev";
+
+const handler = createDualmarkRouteHandler({
+  siteUrl,
+  collections: {},
+  staticPages: [
+    {
+      pattern: "/",
+      render: () =>
+        [
+          "# Open Directory",
+          "",
+          "> The unified home for open-source agent skills designed for founders who hate marketing.",
+          "",
+          "Discover, install, and use AI agent skills via simple CLI commands. Compatible with Claude Code, OpenCode, Codex, Gemini CLI, and more.",
+          "",
+          "## Quick Install",
+          "",
+          "```",
+          'npx "@opendirectory.dev/skills" install [skill-name] --target [agent]',
+          "```",
+          "",
+          "## Pages",
+          "",
+          "- [Documentation](/docs) — Installation guides and setup instructions",
+          "- [Privacy Policy](/privacy) — How we handle your data",
+          "- [Terms of Service](/terms) — Terms governing use of Open Directory",
+        ].join("\n"),
+    },
+    {
+      pattern: "/docs",
+      render: () =>
+        [
+          "# Documentation",
+          "",
+          "> Learn how to integrate Open Directory agent skills into your AI agents.",
+          "",
+          "## Installation Methods",
+          "",
+          "### CLI Installation (OpenCode, Codex, Gemini CLI, Hermes)",
+          "",
+          "```",
+          'npx "@opendirectory.dev/skills" install [skill-name] --target opencode',
+          "```",
+          "",
+          "Supported targets: opencode, antigravity, hermes, gemini",
+          "",
+          "### skills.sh Installation",
+          "",
+          "```",
+          "npx skills add Varnan-Tech/opendirectory --skill [SKILL-NAME]",
+          "```",
+          "",
+          "### Claude Code (Native)",
+          "",
+          "1. `/plugin marketplace add Varnan-Tech/opendirectory`",
+          "2. `/plugin install [skill-name]@opendirectory-marketplace`",
+          "",
+          "### Manual Installation",
+          "",
+          "Download the skill folder from GitHub and upload it to Claude Desktop via Settings > Skills.",
+          "",
+          "### Manus AI",
+          "",
+          "Open the skill page on opendirectory.dev and click \"Install in Manus AI\".",
+          "",
+          "---",
+          "",
+          "Full documentation with detailed steps available at [opendirectory.dev/docs](https://opendirectory.dev/docs).",
+        ].join("\n"),
+    },
+    {
+      pattern: "/privacy",
+      render: () =>
+        [
+          "# Privacy Policy",
+          "",
+          "**Owner:** Varnan (Vimmi Naresh Private Limited)",
+          "",
+          "## 1. Information We Collect",
+          "",
+          "We collect information you provide directly when using our services, including:",
+          "- Information provided when contacting us for support",
+          "- Usage data related to how you interact with our website and open-source skills",
+          "",
+          "## 2. How We Use Your Information",
+          "",
+          "We use collected information to:",
+          "- Provide, maintain, and improve our services",
+          "- Respond to comments, questions, and requests",
+          "- Analyze usage trends and measure platform effectiveness",
+          "",
+          "## 3. Cookies and Tracking Technologies",
+          "",
+          "We use cookies, web beacons, and similar tracking technologies to enhance user experience, analyze website performance, and gather statistical data. You may adjust browser settings to refuse cookies.",
+          "",
+          "## 4. Open Source Repositories",
+          "",
+          "Our skills and tools are distributed as open-source repositories on GitHub. Interactions with these repositories are subject to GitHub's privacy policy and terms of service.",
+          "",
+          "## 5. Contact",
+          "",
+          "For questions about this Privacy Policy, contact us at [github.com/Varnan-Tech](https://github.com/Varnan-Tech).",
+        ].join("\n"),
+    },
+    {
+      pattern: "/terms",
+      render: () =>
+        [
+          "# Terms of Service",
+          "",
+          "**Owner:** Varnan (Vimmi Naresh Private Limited)",
+          "",
+          "## 1. Acceptance of Terms",
+          "",
+          "By accessing and using the Open Directory platform, skills, tools, and MCP servers, you accept and agree to be bound by these terms.",
+          "",
+          "## 2. Open Source Licenses",
+          "",
+          "Skills and tools featured in this directory are distributed under various open-source licenses. Refer to the specific `LICENSE.md` file in each GitHub repository for detailed terms.",
+          "",
+          "## 3. Disclaimer of Warranties",
+          "",
+          "Our tools, skills, and documentation are provided \"as is\" without any warranty of any kind, express or implied.",
+          "",
+          "## 4. Limitation of Liability",
+          "",
+          "Vimmi Naresh Private Limited and its contributors shall not be liable for any direct, indirect, incidental, special, or consequential damages arising from use of the skills and tools provided.",
+          "",
+          "## 5. Governing Law",
+          "",
+          "These Terms shall be governed by the laws of the jurisdiction in which Vimmi Naresh Private Limited operates.",
+        ].join("\n"),
+    },
+  ],
+});
+
+export const dynamic = "force-static";
+
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ path: string[] }> }
+) {
+  const resolvedParams = await params;
+  const requestPath = "/" + resolvedParams.path.join("/");
+  const normalizedPath = requestPath.replace(/\/+$/, "") || "/";
+
+  if (!ALLOWED_PATHS.has(normalizedPath)) {
+    return new Response("Not found", { status: 404 });
+  }
+
+  return handler.GET(request, { params });
+}
+
+export const generateStaticParams = handler.generateStaticParams;

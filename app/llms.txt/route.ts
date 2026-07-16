@@ -1,44 +1,93 @@
-import { NextResponse } from 'next/server';
+import { renderLlmsTxt } from "@dualmark/core";
+
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 
 export async function GET() {
+  const baseUrl = "https://opendirectory.dev";
+
+  // Static collection sections
+  const staticSections = [
+    {
+      title: "Documentation",
+      description: "Learn how to integrate Open Directory agent skills into your AI agents.",
+      links: [
+        { title: "Documentation", href: `${baseUrl}/docs`, description: "Installation guides and setup instructions" },
+      ],
+    },
+    {
+      title: "Policies",
+      links: [
+        { title: "Privacy Policy", href: `${baseUrl}/privacy`, description: "How we handle your data" },
+        { title: "Terms of Service", href: `${baseUrl}/terms`, description: "Terms governing use of Open Directory" },
+      ],
+    },
+  ];
+
+  // Fetch available skills from GitHub dynamically
+  const token = process.env.GITHUB_TOKEN;
+
   try {
-    const res = await fetch("https://api.github.com/repos/Varnan-Tech/opendirectory/contents/skills", {
-      next: { revalidate: 3600 },
-    });
-    
-    if (!res.ok) {
-      throw new Error("Failed to fetch skills");
-    }
-    
-    const skillsFolders = await res.json();
-    
-    let text = `# Open Directory - Agent Skills\n\n`;
-    text += `> Open Directory is the unified home for open-source agent skills built for founders who hate marketing.\n\n`;
-    
-    text += `## Available Skills\n\n`;
-    
-    for (const folder of skillsFolders) {
-      if (folder.type === 'dir') {
-         text += `- **${folder.name}**\n`;
-         text += `  - Claude Code: \`/plugin install ${folder.name}@opendirectory-marketplace\`\n`;
-         text += `  - Other Agents: \`npx "@opendirectory.dev/skills" install ${folder.name} --target [opencode|antigravity|hermes|gemini]\`\n\n`;
+    const res = await fetch(
+      "https://api.github.com/repos/Varnan-Tech/opendirectory/contents/skills",
+      {
+        headers: token ? { Authorization: `token ${token}` } : {},
+        next: { revalidate: 3600 },
+      }
+    );
+
+    if (res.ok) {
+      const skillsFolders = await res.json() as { type: string; name: string }[];
+      const validSkills = skillsFolders.filter((f) => f.type === "dir");
+
+      if (validSkills.length > 0) {
+        staticSections.push({
+          title: "Available Skills",
+          description: `${validSkills.length} open-source agent skills ready to install.`,
+          links: validSkills.map((s) => ({
+            title: s.name,
+            href: `${baseUrl}/?skill=${s.name}`,
+            description: `Install with: npx "@opendirectory.dev/skills" install ${s.name} --target [agent]`,
+          })),
+        });
+
+        staticSections.push({
+          title: "Installation Instructions",
+          description:
+            "Skills can be installed via multiple methods depending on your AI agent.",
+          links: [
+            {
+              title: "Claude Code (Native)",
+              href: `${baseUrl}/docs`,
+              description:
+                'Run `/plugin marketplace add Varnan-Tech/opendirectory` then `/plugin install [skill-name]@opendirectory-marketplace`',
+            },
+            {
+              title: "Standard Installation",
+              href: `${baseUrl}/docs`,
+              description:
+                'Run `npx "@opendirectory.dev/skills" install [skill-name] --target [agent]`',
+            },
+          ],
+        });
       }
     }
-    
-    text += `\n## Global Installation Instructions\n`;
-    text += `### Claude Code (Native)\n`;
-    text += `1. \`/plugin marketplace add Varnan-Tech/opendirectory\`\n`;
-    text += `2. \`/plugin install [skill-name]@opendirectory-marketplace\`\n\n`;
-    
-    text += `### Standard Installation\n`;
-    text += `\`npx "@opendirectory.dev/skills" install [skill-name] --target [agent]\`\n`;
-
-    return new NextResponse(text, {
-      headers: {
-        'Content-Type': 'text/plain',
-      },
-    });
-  } catch (error) {
-    return new NextResponse("Error generating llms.txt", { status: 500 });
+  } catch {
+    // Silently fall through — static sections still render
   }
+
+  const body = renderLlmsTxt({
+    brandName: "Open Directory",
+    description:
+      "The unified home for open-source agent skills designed for founders who hate marketing. Discover, install, and use AI agent skills via simple CLI commands.",
+    sections: staticSections,
+  });
+
+  return new Response(body, {
+    headers: {
+      "Content-Type": "text/markdown; charset=utf-8",
+      "Cache-Control": "public, max-age=3600",
+      Vary: "Accept",
+    },
+  });
 }

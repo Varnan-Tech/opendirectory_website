@@ -7,6 +7,10 @@ import { eq } from 'drizzle-orm';
 import IneligibleMessage from './IneligibleMessage';
 import AlreadyClaimedMessage from './AlreadyClaimedMessage';
 
+export const metadata = {
+  robots: { index: false, follow: false },
+};
+
 export default async function ClaimPage() {
   const session = await auth();
 
@@ -34,9 +38,9 @@ export default async function ClaimPage() {
     );
   }
 
-  const githubUsername = (session.user as any).login;
+  const githubUsername = (session?.user as { login?: string } | undefined)?.login;
 
-  if (!githubUsername) {
+  if (!githubUsername || typeof githubUsername !== "string") {
     return <IneligibleMessage />;
   }
 
