@@ -1,18 +1,18 @@
-import { MetadataRoute } from 'next';
+import { MetadataRoute } from "next";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://opendirectory.dev';
-  
+  const baseUrl = "https://opendirectory.dev";
   let lastModified = new Date();
 
   try {
-    const res = await fetch("https://api.github.com/repos/Varnan-Tech/opendirectory/contents/skills", {
-      next: { revalidate: 3600 },
-    });
+    const res = await fetch(
+      "https://api.github.com/repos/Varnan-Tech/opendirectory/contents/skills",
+      { next: { revalidate: 3600 } }
+    );
 
     if (res.ok) {
       const skillsFolders = await res.json();
-      if (skillsFolders && skillsFolders.length > 0) {
+      if (Array.isArray(skillsFolders) && skillsFolders.length > 0) {
         lastModified = new Date();
       }
     }
@@ -23,15 +23,27 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   return [
     {
       url: baseUrl,
-      lastModified: lastModified,
-      changeFrequency: 'daily',
+      lastModified,
+      changeFrequency: "daily",
       priority: 1,
     },
     {
       url: `${baseUrl}/docs`,
-      lastModified: lastModified,
-      changeFrequency: 'weekly',
+      lastModified,
+      changeFrequency: "weekly",
       priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/privacy`,
+      lastModified,
+      changeFrequency: "monthly",
+      priority: 0.3,
+    },
+    {
+      url: `${baseUrl}/terms`,
+      lastModified,
+      changeFrequency: "monthly",
+      priority: 0.3,
     },
   ];
 }
