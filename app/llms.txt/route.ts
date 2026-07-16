@@ -25,10 +25,15 @@ export async function GET() {
   ];
 
   // Fetch available skills from GitHub dynamically
+  const token = process.env.GITHUB_TOKEN;
+
   try {
     const res = await fetch(
       "https://api.github.com/repos/Varnan-Tech/opendirectory/contents/skills",
-      { next: { revalidate: 3600 } }
+      {
+        headers: token ? { Authorization: `token ${token}` } : {},
+        next: { revalidate: 3600 },
+      }
     );
 
     if (res.ok) {
@@ -81,7 +86,6 @@ export async function GET() {
   return new Response(body, {
     headers: {
       "Content-Type": "text/markdown; charset=utf-8",
-      "X-Robots-Tag": "noindex",
       "Cache-Control": "public, max-age=3600",
       Vary: "Accept",
     },

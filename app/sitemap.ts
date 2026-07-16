@@ -5,9 +5,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   let lastModified = new Date();
 
   try {
+    const token = process.env.GITHUB_TOKEN;
     const res = await fetch(
       "https://api.github.com/repos/Varnan-Tech/opendirectory/contents/skills",
-      { next: { revalidate: 3600 } }
+      {
+        headers: token ? { Authorization: `token ${token}` } : {},
+        next: { revalidate: 3600 },
+      }
     );
 
     if (res.ok) {

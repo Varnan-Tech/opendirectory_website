@@ -12,6 +12,7 @@
   "dependencies": {
     "@base-ui/react": "^1.4.0",
     "@dualmark/converters": "^0.10.0",
+    "@dualmark/core": "^0.10.0",
     "@dualmark/nextjs": "^0.10.0",
     "@lobehub/icons": "^5.3.0",
     "@tailwindcss/typography": "^0.5.19",

@@ -1,4 +1,7 @@
+import { NextRequest } from "next/server";
 import { createDualmarkRouteHandler } from "@dualmark/nextjs";
+
+const ALLOWED_PATHS = new Set(["/", "/docs", "/privacy", "/terms"]);
 
 const siteUrl = "https://opendirectory.dev";
 
@@ -138,5 +141,20 @@ const handler = createDualmarkRouteHandler({
 });
 
 export const dynamic = "force-static";
-export const GET = handler.GET;
+
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ path: string[] }> }
+) {
+  const resolvedParams = await params;
+  const requestPath = "/" + resolvedParams.path.join("/");
+  const normalizedPath = requestPath.replace(/\/+$/, "") || "/";
+
+  if (!ALLOWED_PATHS.has(normalizedPath)) {
+    return new Response("Not found", { status: 404 });
+  }
+
+  return handler.GET(request, { params });
+}
+
 export const generateStaticParams = handler.generateStaticParams;
